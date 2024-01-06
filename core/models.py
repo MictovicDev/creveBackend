@@ -11,8 +11,8 @@ from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
-        ('Creative', 'Creative'),
-        ('User', 'User'),
+        ('Client', 'Client'),
+        ('Talent', 'Talent'),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     firstname = models.CharField(max_length=500,blank=True, null=True)

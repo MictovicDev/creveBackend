@@ -1,0 +1,16 @@
+# Ignore virtual environment folders
+venv/
+env/
+
+# Ignore compiled Python files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore local configuration files
+.env
+config/local_settings.py
+
+# Ignore database files
+db.sqlite3

@@ -15,14 +15,14 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
         
-class CreativeView(generics.ListCreateAPIView):
+class ClientView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
-    queryset = User.objects.filter(role='Creative')
+    queryset = User.objects.filter(role='Client')
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            user = serializer.save(role='Creative')
+            user = serializer.save(role='Client')
             proflie = Profile.objects.create(user=user)
             token = str(RefreshToken.for_user(user))
             user.token = token
@@ -31,14 +31,14 @@ class CreativeView(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class UserView(generics.ListCreateAPIView):
+class TalentView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
-    queryset = User.objects.filter(role='Creative')
+    queryset = User.objects.filter(role='Talent')
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            user = serializer.save(role='User')
+            user = serializer.save(role='Talent')
             proflie = Profile.objects.create(user=user)
             token = str(RefreshToken.for_user(user))
             user.token = token

@@ -1,5 +1,6 @@
 
 from pathlib import Path
+import dj_database_url
 import os
 from datetime import timedelta
 from django.conf import settings
@@ -32,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'django_extensions',
+    # 'django_extensions',
     'rest_framework',
     'rest_framework_simplejwt',
 ]
@@ -72,13 +73,17 @@ WSGI_APPLICATION = 'creveBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+DATABASES = {}
+
+DATABASES["default"]=dj_database_url.parse('postgres://creveafrica_user:KZjM9CkmaTk7M96sbmEq29UYCZnBPbvB@dpg-cmcqsu021fec73ctsvpg-a.oregon-postgres.render.com/creveafrica')
+print(BASE_DIR)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -181,3 +186,12 @@ SIMPLE_JWT = {
 CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
+
+
+
+
+# www.tum.de
+# www.uni-bonn.de/en
+# www.heidelberg.de
+# www.rwth-aachen.de
+# www.hu-berlin.de/de
