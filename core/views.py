@@ -45,11 +45,15 @@ class TalentView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            user = serializer.save(role='Talent')
+            user = serializer.save(role='Client')
             proflie = Profile.objects.create(user=user)
             token = str(RefreshToken.for_user(user))
             user.token = token
+            fullname = user.fullname
+            useremail = user.email
+            user.is_active = True
             user.save()
+            email.send_linkmail(fullname,useremail,token)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
