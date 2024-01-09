@@ -75,6 +75,8 @@ WSGI_APPLICATION = 'creveBackend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -199,6 +201,15 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'creveafrica@gmail.com'
+EMAIL_HOST_PASSWORD = 'twghejmkuvptltrv'
+DEFAULT_FROM_USER = 'creveafrica@gmail.com'
+SERVER_EMAIL =  'creveafrica@gmail.com' 
 
 # www.tum.de
 # www.uni-bonn.de/en

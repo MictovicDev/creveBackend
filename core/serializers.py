@@ -52,5 +52,6 @@ class UserSerializer(serializers.ModelSerializer):
            raise serializers.ValidationError("Password should contain a digit.")
         if not re.search(r"[!@#$%^&*]", attrs):
            raise serializers.ValidationError("Password should have a special character.")
-        
-        
+        return attrs
+     
+      

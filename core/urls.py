@@ -12,4 +12,5 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/creative/', views.ClientView.as_view(), name='client_signup'),
     path('auth/user/', views.TalentView.as_view(), name='talent_signup'),
+    path('auth/activation/', views.TalentView.as_view(), name='talent_signup'),
 ]
