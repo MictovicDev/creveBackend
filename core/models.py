@@ -46,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 
 class Profile(models.Model):
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='profile_pics/')
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     display_name = models.CharField(max_length=100,blank=True, null=True)
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
