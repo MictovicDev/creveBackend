@@ -9,6 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from core.models import *
 from . import email
+from . import urls
 
 # Create your views here.
 
@@ -68,3 +69,12 @@ class ActivateAccount(APIView):
         except:
             data = {'message': "User does not exist"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        
+class DocumentApi(APIView):
+    permission_classes = [permissions.AllowAny]
+    def get(self, request):
+        data = {}
+        for item in urls.urlpatterns:
+            name = ' '.join(item.name.split('_'))
+            data[name.capitalize()] = str(item.pattern)
+        return Response(data=data, status=status.HTTP_404_NOT_FOUND)
