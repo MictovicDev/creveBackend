@@ -6,6 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers,response,status
 from django.contrib.auth.password_validation import validate_password
 from core.models import *
+import re
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -14,6 +15,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
       token = super().get_token(user)
       token['email'] = user.email
       token['role'] = user.role
+      token['profile_pics'] = user.profile_pics
     #   if user.profile_pics:
     #       token['profile_pics'] = user.profile_pics.url
     #   else:
@@ -38,3 +40,17 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+     
+     def validate_password(self,attrs):
+        if len(attrs) < 8:
+          raise serializers.ValidationError("Password is too short.")
+        if not re.search(r"[A-Z]", attrs):
+            raise serializers.ValidationError("Password Should contain a capital letter.")
+        if not re.search(r"[a-z]", attrs):
+           raise serializers.ValidationError("Password should contain a lower letter.")
+        if not re.search(r"\d", attrs):
+           raise serializers.ValidationError("Password should contain a digit.")
+        if not re.search(r"[!@#$%^&*]", attrs):
+           raise serializers.ValidationError("Password should have a special character.")
+        
+        

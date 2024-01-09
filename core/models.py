@@ -47,4 +47,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 
 class Profile(models.Model):
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='profile_pics/')
+    display_name = models.CharField(max_length=100,blank=True, null=True)
+    location = models.CharField(max_length=250,blank=True, null=True)
+    language = models.CharField(max_length=250,blank=True, null=True)
+    about = models.TextField(blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

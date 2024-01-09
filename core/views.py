@@ -5,6 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from core.serializers import MyTokenObtainPairSerializer, UserSerializer
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 from core.models import *
 
 # Create your views here.
