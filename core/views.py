@@ -84,15 +84,17 @@ class UsersUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.AllowAny]
 
     def get_object(self):
-        pk = self.kwargs['pk']
-        user = User.objects.get(id=pk)
-        print(user)
+        pk = self.request.user.id
+        try:
+            user = User.objects.get(id=pk)
+        except:
+             return Response({"error_message": "user not found"}, status=status.HTTP_404_NOT_FOUND)
         profile = Profile.objects.get_or_create(user=user)[0]
         return profile
 
     def update(self, request,*args, **kwargs):
         profile = self.get_object()
-        print(request.data)
+        print(profile)
         serializer = self.get_serializer(profile, data=request.data)
         if serializer.is_valid():
             serializer.save()
