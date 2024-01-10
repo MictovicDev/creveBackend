@@ -55,4 +55,17 @@ class UserSerializer(serializers.ModelSerializer):
            raise serializers.ValidationError("Password should have a special character.")
         return attrs
      
-      
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+     class Meta:
+         model = Profile
+         fields = ('profile_pics','display_name','location','language','about')
+     def update(self,instance, validated_data):
+         instance.profile_pics = validated_data.get('profile_pics')
+         instance.display_name = validated_data.get('display_name')
+         instance.location = validated_data.get('location')
+         instance.language = validated_data.get('language')
+         instance.about = validated_data.get('about')
+         instance.save()
+         return instance

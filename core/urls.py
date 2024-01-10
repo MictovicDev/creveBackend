@@ -11,7 +11,8 @@ urlpatterns = [
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'), #you can use to login
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api', views.DocumentApi.as_view(), name="endpoints" ),
-    path('auth/creative/', views.ClientView.as_view(), name='client_signup'),
-    path('auth/user/', views.TalentView.as_view(), name='talent_signup'),
+    path('auth/user/', views.ClientView.as_view(), name='client_signup'),
+    path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
+    path('update', views.UsersUpdateView.as_view(), name="updateuser"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
 ]

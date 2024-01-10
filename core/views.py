@@ -6,10 +6,12 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from core.serializers import MyTokenObtainPairSerializer, UserSerializer
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.views import APIView
 from core.models import *
 from . import email
 from . import urls
+from core.serializers import *
 
 # Create your views here.
 
@@ -73,7 +75,34 @@ class ActivateAccount(APIView):
         except:
             data = {'message': "User does not exist"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        
+
+
+class UsersUpdateView(generics.RetrieveUpdateAPIView):
+    parser_classes = [MultiPartParser, FormParser]
+    queryset = User.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_object(self):
+        pk = self.kwargs['pk']
+        user = User.objects.get(id=pk)
+        print(user)
+        profile = Profile.objects.get_or_create(user=user)[0]
+        return profile
+
+    def update(self, request,*args, **kwargs):
+        profile = self.get_object()
+        print(request.data)
+        serializer = self.get_serializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 class DocumentApi(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
