@@ -16,7 +16,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
       token['email'] = user.email
       token['role'] = user.role
       token['name'] = user.fullname
-      token['profile_pics'] = user.profile.profile_pics.url
+      token['profile_pics'] = 'https://creve.onrender.com' + user.profile.profile_pics.url
     #   if user.profile_pics:
     #       token['profile_pics'] = user.profile_pics.url
     #   else:
