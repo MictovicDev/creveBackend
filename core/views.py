@@ -47,7 +47,7 @@ class TalentView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            user = serializer.save(role='Client')
+            user = serializer.save(role='Talent')
             proflie = Profile.objects.create(user=user)
             token = str(RefreshToken.for_user(user))
             user.token = token
