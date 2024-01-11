@@ -16,11 +16,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
       token['email'] = user.email
       token['role'] = user.role
       token['name'] = user.fullname
-      token['profile_pics'] = 'https://creve.onrender.com' + user.profile.profile_pics.url
-    #   if user.profile_pics:
-    #       token['profile_pics'] = user.profile_pics.url
-    #   else:
-    #       token['profile_pics'] = ''
+      if user.role == 'Client':
+         profile_pics = user.clientprofile.profile_pics.url
+      elif user.role == 'Talent':
+         profile_pics = user.talentprofile.profile_pics.url
+      token['profile_pics'] = 'https://creve.onrender.com' + profile_pics
       return token
     
 
@@ -57,15 +57,12 @@ class UserSerializer(serializers.ModelSerializer):
      
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ClientProfileSerializer(serializers.ModelSerializer):
      class Meta:
-         model = Profile
-         fields = ('profile_pics','display_name','location','language','about')
+         model = ClientProfile
+         fields = ('profile_pics','name')
      def update(self,instance, validated_data):
          instance.profile_pics = validated_data.get('profile_pics')
-         instance.display_name = validated_data.get('display_name')
-         instance.location = validated_data.get('location')
-         instance.language = validated_data.get('language')
-         instance.about = validated_data.get('about')
+         instance.name = validated_data.get('name')
          instance.save()
          return instance

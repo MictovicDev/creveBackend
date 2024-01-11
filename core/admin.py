@@ -1,7 +1,8 @@
 from django.contrib import admin
-from core.models import User, Profile
+from core.models import *
 
 # Register your models here.
 
 admin.site.register(User)
-admin.site.register(Profile)
+admin.site.register(ClientProfile)
+admin.site.register(TalentProfile)

@@ -29,7 +29,7 @@ class ClientView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         if serializer.is_valid():
             user = serializer.save(role='Client')
-            proflie = Profile.objects.create(user=user)
+            proflie = ClientProfile.objects.create(user=user)
             token = str(RefreshToken.for_user(user))
             user.token = token
             fullname = user.fullname
@@ -48,7 +48,7 @@ class TalentView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         if serializer.is_valid():
             user = serializer.save(role='Talent')
-            proflie = Profile.objects.create(user=user)
+            proflie = TalentProfile.objects.create(user=user)
             token = str(RefreshToken.for_user(user))
             user.token = token
             fullname = user.fullname
@@ -77,10 +77,10 @@ class ActivateAccount(APIView):
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
 
-class UsersUpdateView(generics.RetrieveUpdateAPIView):
+class ClientUpdateView(generics.RetrieveUpdateAPIView):
     parser_classes = [MultiPartParser, FormParser]
     queryset = User.objects.all()
-    serializer_class = ProfileSerializer
+    serializer_class = ClientProfileSerializer
     permission_classes = [permissions.AllowAny]
 
     def get_object(self):
@@ -89,7 +89,7 @@ class UsersUpdateView(generics.RetrieveUpdateAPIView):
             user = User.objects.get(id=pk)
         except:
              return Response({"error_message": "user not found"}, status=status.HTTP_404_NOT_FOUND)
-        profile = Profile.objects.get_or_create(user=user)[0]
+        profile = ClientProfile.objects.get_or_create(user=user)[0]
         return profile
 
     def update(self, request,*args, **kwargs):

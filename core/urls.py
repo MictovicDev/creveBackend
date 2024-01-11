@@ -13,6 +13,6 @@ urlpatterns = [
     path('api', views.DocumentApi.as_view(), name="endpoints" ),
     path('auth/user/', views.ClientView.as_view(), name='client_signup'),
     path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
-    path('update/', views.UsersUpdateView.as_view(), name="updateuser"),
+    path('clientupdate/', views.ClientUpdateView.as_view(), name="clientupdate"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
 ]
