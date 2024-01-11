@@ -15,7 +15,7 @@ from core.serializers import *
 
 # Create your views here.
 
-
+print("hello")
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -71,7 +71,10 @@ class ActivateAccount(APIView):
                 'user': user.email,
                 'token': user.token
             }
-            return redirect('https://creve.vercel.app/login')
+            if user.role == 'Client':
+                return redirect('https://creve.vercel.app/login')
+            elif user.role == 'Talent':
+                return redirect('https://creve.vercel.app//loginCreative')
         except:
             data = {'message': "User does not exist"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
