@@ -23,7 +23,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length= 250, blank=True,null=True, choices=ROLE_CHOICES)
     token = models.CharField(max_length=500, blank=True, null=True)
     updates = models.BooleanField(default=False)
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     authMedium = models.CharField(max_length=50, default='email')
   
     objects = UserManager()
@@ -48,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class TalentProfile(models.Model):
     display_name = models.CharField(max_length=100,blank=True, null=True)
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
     about = models.TextField(blank=True, null=True)
@@ -55,6 +55,8 @@ class TalentProfile(models.Model):
 
 
 
+
+
 class ClientProfile(models.Model):
-    name = models.CharField(max_length=50, blank=True, null=True,unique=False)
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
