@@ -88,8 +88,9 @@ class ClientUpdateView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
-        user = User.objects.get(email=user)
         print(user)
+        user = User.objects.get(email=user)
+
         return user
     
     # def update(self, request,*args, **kwargs):

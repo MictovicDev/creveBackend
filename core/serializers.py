@@ -62,7 +62,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
          fields = ('profile_pics',)
 
 class UpdateClientSerializer(serializers.ModelSerializer):
-    fullname = serializers.CharField()
+    fullname = serializers.CharField(required=False)
     clientprofile = ClientProfileSerializer(required=False)
     id = serializers.UUIDField(read_only=True)
     email = serializers.EmailField(read_only=True)
