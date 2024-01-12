@@ -14,5 +14,6 @@ urlpatterns = [
     path('auth/user/', views.ClientView.as_view(), name='client_signup'),
     path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
     path('clientupdate/', views.ClientUpdateView.as_view(), name="clientupdate"),
+    path('talentupdate/', views.TalentUpdateView.as_view(), name="talentupdate"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
 ]

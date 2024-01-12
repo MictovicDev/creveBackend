@@ -56,13 +56,44 @@ class UserSerializer(serializers.ModelSerializer):
         return attrs
      
 
-
 class ClientProfileSerializer(serializers.ModelSerializer):
      class Meta:
          model = ClientProfile
-         fields = ('profile_pics','name')
-     def update(self,instance, validated_data):
+         fields = ('name',)
+
+class UpdateClientSerializer(serializers.ModelSerializer):
+    clientprofile = ClientProfileSerializer(required=False)
+    profile_pics = serializers.ImageField()
+    id = serializers.UUIDField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    class Meta:
+        model = User
+        fields = ('clientprofile','profile_pics','email','id')
+    def update(self, instance, validated_data):
+        instance.profile_pics = validated_data.get('profile_pics', instance.profile_pics)
+        profile_data = validated_data.get('clientprofile')
+        print(profile_data)
+        if profile_data:
+            profile_instance = instance.clientprofile
+            for attr, value in profile_data.items():
+                setattr(profile_instance, attr, value)
+            profile_instance.save()
+        instance.save()
+        return instance
+    
+
+    
+     
+class TalentProfileSerializer(serializers.ModelSerializer):
+     class Meta:
+         model = TalentProfile
+         fields = ('profile_pics','display_name','location','language','about')
+         
+     def update(self, instance, validated_data):
          instance.profile_pics = validated_data.get('profile_pics')
-         instance.name = validated_data.get('name')
+         instance.dispaly_name = validated_data.get('display_name')
+         instance.location = validated_data.get('location')
+         instance.language = validated_data.get('language')
+         instance.about = validated_data.get('about')
          instance.save()
          return instance

@@ -16,16 +16,15 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     phone_number = models.PositiveBigIntegerField(null=True)
-    lastname = models.CharField(max_length=500)
     email = models.EmailField(verbose_name='email address',max_length=255,unique=True,)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    fullname = models.CharField(max_length=50, blank=True, null=True,unique=False)
     role = models.CharField(max_length= 250, blank=True,null=True, choices=ROLE_CHOICES)
     token = models.CharField(max_length=500, blank=True, null=True)
     updates = models.BooleanField(default=False)
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     authMedium = models.CharField(max_length=50, default='email')
-
+  
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
@@ -47,7 +46,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class TalentProfile(models.Model):
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     display_name = models.CharField(max_length=100,blank=True, null=True)
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
@@ -57,6 +55,5 @@ class TalentProfile(models.Model):
 
 
 class ClientProfile(models.Model):
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
-    name = models.CharField(max_length=100,blank=True, null=True)
+    name = models.CharField(max_length=50, blank=True, null=True,unique=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
