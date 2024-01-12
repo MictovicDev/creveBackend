@@ -15,6 +15,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('Talent', 'Talent'),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    fullname = models.CharField(max_length=250,blank=True, null=True)
     phone_number = models.PositiveBigIntegerField(null=True)
     email = models.EmailField(verbose_name='email address',max_length=255,unique=True,)
     is_active = models.BooleanField(default=False)
