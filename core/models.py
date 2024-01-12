@@ -60,3 +60,7 @@ class TalentProfile(models.Model):
 class ClientProfile(models.Model):
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
+
+
+    def __str__(self):
+        return f"{self.user.fullname}'s  Profile"

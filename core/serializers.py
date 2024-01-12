@@ -35,6 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','email','password','fullname','role',)
 
+
      def create(self, validated_data):
         password = validated_data.pop('password')
         user = User.objects.create(**validated_data)
@@ -57,43 +58,22 @@ class UserSerializer(serializers.ModelSerializer):
      
 
 class ClientProfileSerializer(serializers.ModelSerializer):
+     user = serializers.PrimaryKeyRelatedField(read_only=True)
      class Meta:
          model = ClientProfile
-         fields = ('profile_pics',)
+         fields = ('id','user','profile_pics',)
 
-class UpdateClientSerializer(serializers.ModelSerializer):
-    fullname = serializers.CharField(required=False)
-    clientprofile = ClientProfileSerializer(required=False)
-    id = serializers.UUIDField(read_only=True)
-    email = serializers.EmailField(read_only=True)
-    class Meta:
+         
+class UserUpdateSerializer(serializers.ModelSerializer):
+     id = serializers.UUIDField(read_only=True,)
+     email = serializers.EmailField(read_only=True)
+     fullname = serializers.CharField()
+     
+
+     class Meta:
         model = User
-        fields = ('clientprofile','email','id','fullname')
-    def update(self, instance, validated_data):
-        instance.fullname = validated_data.get('fullname', instance.fullname)
-        profile_data = validated_data.get('clientprofile')
-        print(profile_data)
-        if profile_data:
-            profile_instance = instance.clientprofile
-            for attr, value in profile_data.items():
-                setattr(profile_instance, attr, value)
-            profile_instance.save()
-        instance.save()
-        return instance
+        fields = ('id','email','fullname',)
     
 
     
      
-class TalentProfileSerializer(serializers.ModelSerializer):
-     class Meta:
-         model = TalentProfile
-         fields = ('profile_pics','display_name','location','language','about')
-         
-     def update(self, instance, validated_data):
-         instance.profile_pics = validated_data.get('profile_pics')
-         instance.dispaly_name = validated_data.get('display_name')
-         instance.location = validated_data.get('location')
-         instance.language = validated_data.get('language')
-         instance.about = validated_data.get('about')
-         instance.save()
-         return instance

@@ -13,7 +13,9 @@ urlpatterns = [
     path('api', views.DocumentApi.as_view(), name="endpoints" ),
     path('auth/user/', views.ClientView.as_view(), name='client_signup'),
     path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
-    path('clientupdate/', views.ClientUpdateView.as_view(), name="clientupdate"),
-    path('talentupdate/', views.TalentUpdateView.as_view(), name="talentupdate"),
+    path('auth/user/<str:pk>/', views.ClientUpdateGetDeleteView.as_view(), name="clientupdate"),
+    path('auth/userprofile/', views.UserProfileGetView.as_view(), name="usersprofile"),
+    path('auth/userprofile/<str:pk>/', views.UserProfileGetUpdateView.as_view(), name="profileupdate"),
+    # path('talentupdate/', views.TalentUpdateView.as_view(), name="talentupdate"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
 ]
