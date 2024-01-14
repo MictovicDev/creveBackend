@@ -108,33 +108,6 @@ class UserProfileGetUpdateView(generics.RetrieveUpdateAPIView):
         instance = serializer.save()
 
 
-    
-        
-# class TalentUpdateView(generics.RetrieveUpdateAPIView):
-#     parser_classes = [MultiPartParser, FormParser]
-#     queryset = User.objects.all()
-#     serializer_class = TalentProfileSerializer
-#     permission_classes = [permissions.AllowAny]
-
-#     def get_object(self):
-#         pk = self.request.user.id
-#         try:
-#             user = User.objects.get(id=pk)
-#         except:
-#              return Response({"error_message": "user not found"}, status=status.HTTP_404_NOT_FOUND)
-#         profile = ClientProfile.objects.get_or_create(user=user)[0]
-#         return profile
-
-#     def update(self, request,*args, **kwargs):
-#         profile = self.get_object()
-#         print(profile)
-#         serializer = self.get_serializer(profile, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class DocumentApi(APIView):
     permission_classes = [permissions.AllowAny]
