@@ -104,7 +104,7 @@ class UserProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = ClientProfileSerializer
     lookup_field = 'pk'
 
-    def user_update(self,serializer):
+    def clientprofile_update(self,serializer):
         instance = serializer.save()
 
 
