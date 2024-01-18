@@ -88,6 +88,7 @@ DATABASES = {}
 
 DATABASES["default"]=dj_database_url.parse('postgres://creveafrica_user:KZjM9CkmaTk7M96sbmEq29UYCZnBPbvB@dpg-cmcqsu021fec73ctsvpg-a.oregon-postgres.render.com/creveafrica')
 print(BASE_DIR)
+print('hello')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
