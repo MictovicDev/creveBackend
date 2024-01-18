@@ -65,6 +65,17 @@ class ClientProfileSerializer(serializers.ModelSerializer):
          model = ClientProfile
          fields = ('id','user','profile_pics',)
 
+# class DigitalSkillSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = DigitalSkill
+#         fields = ('skills',)
+
+class TalentProfileSerializer(serializers.ModelSerializer):
+     user = serializers.PrimaryKeyRelatedField(read_only=True)
+     class Meta:
+         model = TalentProfile
+         fields = ('id','user','display_name','category','location','language','about','profile_pics','digital_skills','nondigital_skills')
+
          
 class UserUpdateSerializer(serializers.ModelSerializer):
      id = serializers.UUIDField(read_only=True,)

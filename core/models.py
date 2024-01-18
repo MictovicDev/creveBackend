@@ -44,9 +44,35 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
     
 
-
 class TalentProfile(models.Model):
+    NonDigitalSkills = (
+        ('Plumber','Plumber'),
+        ('Civil-Engineer', 'Civil-Engineer'),
+        ('Catering','Catering'),
+        ('Hair_Stylist','Hair_stylist'),
+        ('Electronics/Repairs', 'Electronics/Repairs'),
+        ('Upholstery','Uphosltery'),
+        ('Cobbling','Cobbling'),
+        ('Mechanic', 'Mechanic'),
+        ('Fashion-Designer','Fashion-Designer'),
+    )
+    DigitalSkills = (
+        ('BackendDevelopment', 'BackendDevelopment'),
+        ('MobileDevelopment','MobileDevelopment'),
+        ('UI/UX_Design','UI/UX_Design'),
+        ('Branding_and_Printing', 'Branding_and_Printing'),
+        ('Graphics_Design','Graphics_Design'),
+        ('Content_Creation','Content_Creation'),
+        ('Frontend_development', 'Frontend_Development')
+    )
+    CATEGORY_TYPE = (
+        ('DigitalSkills', 'DigitalSkills'),
+        ('Non-DigitalSkills', 'Non-DigitalSkills'),
+    )
+    digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True, null=True)
+    nondigital_skills = models.CharField(max_length=250, choices=NonDigitalSkills, blank=True, null=True)
     display_name = models.CharField(max_length=100,blank=True, null=True)
+    category = models.CharField(max_length=250, blank=True, null=True, choices=CATEGORY_TYPE)
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
@@ -54,13 +80,51 @@ class TalentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
 
 
+    def __str__(self):
+        return f"{self.user.fullname}'s  Profile"
+    
+    
+# class DigitalSkill(models.Model):
+#     SKILLS_CHOICES = (
+#         ('BackendDevelopment', 'BackendDevelopment'),
+#         ('MobileDevelopment','MobileDevelopment'),
+#         ('UI/UX_Design','UI/UX_Design'),
+#         ('Branding_and_Printing', 'Branding_and_Printing'),
+#         ('Graphics_Design','Graphics_Design'),
+#         ('Content_Creation','Content_Creation'),
+#         ('Frontend_development', 'Frontend_Development')
+#     )
+#     skills = models.CharField(max_length=250, blank=True, null=True, choices=SKILLS_CHOICES)
+#     talentprofile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,related_name='digital_skills')
+
+
+# class NonDigitalSkill(models.Model):
+#     SKILLS_CHOICES = (
+#         ('Plumber','Plumber'),
+#         ('Civil-Engineer', 'Civil-Engineer'),
+#         ('Catering','Catering'),
+#         ('Hair_Stylist','Hair_stylist'),
+#         ('Electronics/Repairs', 'Electronics/Repairs'),
+#         ('Upholstery','Uphosltery'),
+#         ('Cobbling','Cobbling'),
+#         ('Mechanic', 'Mechanic'),
+#         ('Fashion-Designer','Fashion-Designer'),
+#     )
+#     skills = models.CharField(max_length=250, blank=True, null=True, choices=SKILLS_CHOICES)
+#     talentprofile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,related_name='non_digitalskills')
+
+
+
 
 
 
 class ClientProfile(models.Model):
+    
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
 
 
     def __str__(self):
         return f"{self.user.fullname}'s  Profile"
+    
+

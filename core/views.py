@@ -98,6 +98,12 @@ class UserProfileGetView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class CreativeProfileGetView(generics.ListAPIView):
+    queryset = TalentProfile.objects.all()
+    serializer_class = TalentProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 class UserProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = ClientProfile.objects.all()
@@ -105,6 +111,15 @@ class UserProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     lookup_field = 'pk'
 
     def clientprofile_update(self,serializer):
+        instance = serializer.save()
+
+class TalentProfileGetUpdateView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = TalentProfile.objects.all()
+    serializer_class = TalentProfileSerializer
+    lookup_field = 'pk'
+
+    def talentprofile_update(self,serializer):
         instance = serializer.save()
 
 

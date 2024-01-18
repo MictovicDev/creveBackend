@@ -15,7 +15,9 @@ urlpatterns = [
     path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
     path('auth/user/<str:pk>/', views.ClientUpdateGetDeleteView.as_view(), name="clientupdate"),
     path('auth/userprofile/', views.UserProfileGetView.as_view(), name="usersprofile"),
-    path('auth/userprofile/<str:pk>/', views.UserProfileGetUpdateView.as_view(), name="profileupdate"),
+    path('auth/userprofile/<str:pk>/', views.UserProfileGetUpdateView.as_view(), name="userprofileupdate"),
+    path('auth/creativeprofile/', views.CreativeProfileGetView.as_view(), name="creativeprofile"),
+    path('auth/creativeprofile/<str:pk>/', views.TalentProfileGetUpdateView.as_view(), name="creativeprofile"),
     # path('talentupdate/', views.TalentUpdateView.as_view(), name="talentupdate"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
 ]
