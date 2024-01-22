@@ -155,3 +155,26 @@ class ClientProfile(models.Model):
         return f"{self.user.fullname}'s  Profile"
     
 
+
+class WorkSchedule(models.Model):
+    day_choices = [
+        ('Sunday', 'Sunday'),
+        ('Monday', 'Monday'),
+        ('Tuesday', 'Tuesday'),
+        ('Wednesday', 'Wednesday'),
+        ('Thursday', 'Thursday'),
+        ('Friday', 'Friday'),
+        ('Saturday', 'Saturday')
+    ]
+
+
+    day = models.CharField(max_length=500, blank=True, null=True, choices=day_choices)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    talent_profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True,null=True, related_name='work_schedule')
+
+    def __str__(self):
+        return f"{self.day} - {self.start_time.strftime('%I:%M %p')} to {self.end_time.strftime('%I:%M %p').replace('AM', 'PM')}"
+
+    
+

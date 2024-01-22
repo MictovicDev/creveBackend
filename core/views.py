@@ -80,7 +80,7 @@ class ActivateAccount(APIView):
 
 
 class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
+    queryset = User.objects.filter(role='Client')
     lookup_field = 'pk'
     serializer_class = UserUpdateSerializer
     permission_classes = [permissions.AllowAny]
@@ -92,19 +92,19 @@ class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
     def users_destroy(self, instance):
         return super().perform_destroy(instance)
     
-class UserProfileGetView(generics.ListAPIView):
+class ClientProfileGetView(generics.ListAPIView):
     queryset = ClientProfile.objects.all()
     serializer_class = ClientProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class CreativeProfileGetView(generics.ListAPIView):
+class TalentProfileGetView(generics.ListAPIView):
     queryset = TalentProfile.objects.all()
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class UserProfileGetUpdateView(generics.RetrieveUpdateAPIView):
+class ClientProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = ClientProfile.objects.all()
     serializer_class = ClientProfileSerializer
