@@ -12,10 +12,10 @@ from core.models import *
 from . import email
 from . import urls
 from core.serializers import *
-
+from .models import TalentProfile
 # Create your views here.
 
-print("hello")
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
@@ -121,6 +121,57 @@ class TalentProfileGetUpdateView(generics.RetrieveUpdateAPIView):
 
     def talentprofile_update(self,serializer):
         instance = serializer.save()
+
+class SkillGetUpdateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Skills.objects.all()
+    serializer_class = SkillSerializer
+
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            pk = self.kwargs['pk']
+            profile = TalentProfile.objects.get(id=pk)
+            skills = serializer.validated_data.get('skill_list').get('skills')
+            new_skills = []
+            for skill in skills:
+                c_skill = Skills.objects.create(skill=skill, talent_profile=profile)
+                new_skills.append(c_skill)
+                c_skill.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                
+        
+
+
+
+class GalleryGetUpdateView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Skills.objects.all()
+    serializer_class = SkillSerializer
+
+
+
+
+class QuestionGetUpdateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            pk = self.kwargs['pk']
+            profile = TalentProfile.objects.get(id=pk)
+            questions = serializer.validated_data.get('question_list').get('question')
+            new_question = []
+            for question in questions:
+                freq_a_question = Question.objects.create(question=question, talent_profile=profile)
+                freq_a_question.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+
+
+
+
 
 
 

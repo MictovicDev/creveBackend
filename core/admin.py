@@ -6,3 +6,5 @@ from core.models import *
 admin.site.register(User)
 admin.site.register(ClientProfile)
 admin.site.register(TalentProfile)
+admin.site.register(Skills)
+admin.site.register(Question)

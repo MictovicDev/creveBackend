@@ -18,6 +18,8 @@ urlpatterns = [
     path('auth/userprofile/<str:pk>/', views.UserProfileGetUpdateView.as_view(), name="userprofileupdate"),
     path('auth/creativeprofile/', views.CreativeProfileGetView.as_view(), name="creativeprofile"),
     path('auth/creativeprofile/<str:pk>/', views.TalentProfileGetUpdateView.as_view(), name="creativeprofile"),
-    # path('talentupdate/', views.TalentUpdateView.as_view(), name="talentupdate"),
+    path('auth/skill/<str:pk>/', views.SkillGetUpdateView.as_view(), name="create-skill"),
+    path('auth/gallery/<str:pk>/', views.GalleryGetUpdateView.as_view(), name="create-gallery"),
+    path('auth/question/<str:pk>/', views.QuestionGetUpdateView.as_view(), name="create-question"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
 ]

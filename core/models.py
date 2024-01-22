@@ -42,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_admin
-    
+
 
 class TalentProfile(models.Model):
     NonDigitalSkills = (
@@ -70,6 +70,8 @@ class TalentProfile(models.Model):
         ('Non-DigitalSkills', 'Non-DigitalSkills'),
     )
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True, null=True)
+    summary_of_profile = models.TextField(blank=True, null=True)
+    starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     nondigital_skills = models.CharField(max_length=250, choices=NonDigitalSkills, blank=True, null=True)
     display_name = models.CharField(max_length=100,blank=True, null=True)
     category = models.CharField(max_length=250, blank=True, null=True, choices=CATEGORY_TYPE)
@@ -78,44 +80,69 @@ class TalentProfile(models.Model):
     language = models.CharField(max_length=250,blank=True, null=True)
     about = models.TextField(blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
+    website_link = models.URLField(blank=True, null=True)
+    resume_link = models.URLField(blank=True, null=True)
+    linked_in_url = models.URLField(blank=True, null=True)
+    facebook_url = models.URLField(blank=True, null=True)
+    x_url = models.URLField(blank=True, null=True)
+    instagram_url = models.URLField(blank=True, null=True)
+    github_url = models.URLField(blank=True, null=True)
+    behance_url = models.URLField(blank=True, null=True)
+    medium_url = models.URLField(blank=True,null=True)
+
+
 
 
     def __str__(self):
         return f"{self.user.fullname}'s  Profile"
     
+class Skills(models.Model):
+    Skills = (
+        ('web-development', 'web-development'),
+        ('Javascript', 'Javascript'),
+        ('React', 'React'),
+        ('HTML', 'HTML'),
+        ('CSS', 'CSS'),
+        ('Django', 'Django'),
+        ('Flask','Flask')
+    )
+    skill = models.CharField(max_length=250, blank=True, null=True, choices=Skills)
+    talent_profile = models.ForeignKey(TalentProfile, blank=True, null=True, on_delete=models.CASCADE, related_name='skills')
     
-# class DigitalSkill(models.Model):
-#     SKILLS_CHOICES = (
-#         ('BackendDevelopment', 'BackendDevelopment'),
-#         ('MobileDevelopment','MobileDevelopment'),
-#         ('UI/UX_Design','UI/UX_Design'),
-#         ('Branding_and_Printing', 'Branding_and_Printing'),
-#         ('Graphics_Design','Graphics_Design'),
-#         ('Content_Creation','Content_Creation'),
-#         ('Frontend_development', 'Frontend_Development')
-#     )
-#     skills = models.CharField(max_length=250, blank=True, null=True, choices=SKILLS_CHOICES)
-#     talentprofile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,related_name='digital_skills')
 
-
-# class NonDigitalSkill(models.Model):
-#     SKILLS_CHOICES = (
-#         ('Plumber','Plumber'),
-#         ('Civil-Engineer', 'Civil-Engineer'),
-#         ('Catering','Catering'),
-#         ('Hair_Stylist','Hair_stylist'),
-#         ('Electronics/Repairs', 'Electronics/Repairs'),
-#         ('Upholstery','Uphosltery'),
-#         ('Cobbling','Cobbling'),
-#         ('Mechanic', 'Mechanic'),
-#         ('Fashion-Designer','Fashion-Designer'),
-#     )
-#     skills = models.CharField(max_length=250, blank=True, null=True, choices=SKILLS_CHOICES)
-#     talentprofile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,related_name='non_digitalskills')
+    
 
 
 
 
+class Gallery (models.Model):
+    images = models.ImageField(upload_to='files/images',blank=True, null=True)
+    d_profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True,related_name='gallery')
+
+    def __str__(self):
+        return self.image.url
+
+
+class Question(models.Model):
+    question = models.CharField(max_length=5000, blank=True, null=True)
+    talent_profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='questions')
+
+
+    def __str__(self):
+        return self.question
+
+
+class WorkType(models.Model):
+    worktype_choice = (
+        ('Remote', 'Remote'),
+        ('On-site', 'On-site'),
+        ('Hybrid', 'Hybrid'),
+    )
+    work_type = models.CharField(max_length=250, blank=True, null=True, choices=worktype_choice)
+    profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,related_name='work_type')
+
+    def __str__(self):
+        return self.work
 
 
 class ClientProfile(models.Model):

@@ -65,16 +65,51 @@ class ClientProfileSerializer(serializers.ModelSerializer):
          model = ClientProfile
          fields = ('id','user','profile_pics',)
 
-# class DigitalSkillSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = DigitalSkill
-#         fields = ('skills',)
+class SkillSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False,read_only=True)
+    skill_list = serializers.JSONField(write_only=True)
+
+    class Meta:
+        model = Skills
+        fields = ('id','skill','skill_list')
+
+    
+
+class GallerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gallery
+        fields = ('images',)
+
+class QuestionSerializer(serializers.ModelSerializer):
+    question_list = serializers.JSONField(write_only=True)
+   #  question = serializers.
+    class Meta:
+        model = Question
+        fields = ['id', 'question','question_list']
+
+class WorkTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WorkType
+        fields = ('work_type',)
 
 class TalentProfileSerializer(serializers.ModelSerializer):
+     skills = SkillSerializer(read_only=True,many=True)
+     gallery = GallerySerializer(read_only=True)
+     questions = QuestionSerializer(read_only=True,many=True)
+     work_type = WorkTypeSerializer(read_only=True,many=True)
      user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+
      class Meta:
          model = TalentProfile
-         fields = ('id','user','display_name','category','location','language','about','profile_pics','digital_skills','nondigital_skills')
+         fields = '__all__'
+      
+    
+                  
+    
+   
+      
+
 
          
 class UserUpdateSerializer(serializers.ModelSerializer):
