@@ -1,9 +1,9 @@
-
 from pathlib import Path
 import dj_database_url
 import os
 from datetime import timedelta
 from django.conf import settings
+import cloudinary_storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,6 +23,7 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = "core.User"
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +38,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'cloudinary',
+    'cloudinary_storage'
+    
 ]
 
 MIDDLEWARE = [
@@ -87,8 +91,6 @@ WSGI_APPLICATION = 'creveBackend.wsgi.application'
 DATABASES = {}
 
 DATABASES["default"]=dj_database_url.parse('postgres://creveafrica_user:KZjM9CkmaTk7M96sbmEq29UYCZnBPbvB@dpg-cmcqsu021fec73ctsvpg-a.oregon-postgres.render.com/creveafrica')
-print(BASE_DIR)
-print('hello')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -127,11 +129,17 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dr6bsrdid',
+    'API_KEY': '898623249482269',
+    'API_SECRET': '-tneUT5fN57OeUIu-nwE0VdEXS8'
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': (

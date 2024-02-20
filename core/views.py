@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import generics,permissions, response, status
+from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -10,6 +11,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.views import APIView
 from core.models import *
 from . import email
+import requests
 from . import urls
 from core.serializers import *
 from .models import TalentProfile
@@ -183,3 +185,46 @@ class DocumentApi(APIView):
             name = ' '.join(item.name.split('_'))
             data[name.capitalize()] = str(item.pattern)
         return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+
+   
+
+class PayApiView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    def post(self, request):
+        try:
+            api_key = 'LIVE;PK;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6IjY1YjI2Mzg4ZmYyYjY3MDAzYWNjOWIxNSIsInVzZXJJZCI6IjY1YjI2Mzg4ZmYyYjY3MDAzYWNjOWIxMCIsImlhdCI6MTcwNjE4OTcwNH0.xGKx2lCzKzz8kl2A4Fnns16tuzF0XSOI0ui9BVNeH-E'
+            target_endpoint = 'https://api.100pay.co/api/v1/pay/charge'
+            data = {
+            "ref_id": "012232",
+            "customer": {
+                "user_id": str(request.user.id),
+                "name": request.user.fullname,
+                "phone": "80123456789",
+                "email": request.user.email
+            },
+            "billing": {
+                "description": "MY TEST PAYMENT",
+                "amount": "10000",
+                "country": "NG",
+                "currency": "NGN",
+                "vat": "10",
+                "pricing_type": "fixed_or_partial_price"
+            },
+            "metadata": {
+                "is_approved": "yes"
+            },
+            "call_back_url": "http://localhost:8000/verify-payment",
+            "userId": str(request.user.id),
+            "charge_source": "api"
+            }
+            response = requests.post(target_endpoint, json=data, headers={'api-key': f'Bearer {api_key}'})
+            return Response(response.json())
+        except Exception as e:
+            print(f"Error making API request: {e}")
+            return Response({'error': 'Internal Server Error'}, status=500)
+        
+
+class VerifyAPIView(APIView):
+    pass
+        
+           
