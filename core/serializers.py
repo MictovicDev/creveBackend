@@ -6,6 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers,response,status
 from django.contrib.auth.password_validation import validate_password
 from core.models import *
+from phonenumber_field.serializerfields import PhoneNumberField
 import re
 
 
@@ -97,12 +98,16 @@ class WorkScheduleSerializer(serializers.ModelSerializer):
         model = WorkSchedule
         fields = '__all__'
 
+class PhoneNumberSerializer(serializers.Serializer):
+    number = PhoneNumberField(region="CA")
+
 class TalentProfileSerializer(serializers.ModelSerializer):
      skills = SkillSerializer(read_only=True,many=True)
      gallery = GallerySerializer(read_only=True)
      questions = QuestionSerializer(read_only=True,many=True)
      work_type = WorkTypeSerializer(read_only=True,many=True)
      work_schedule = WorkScheduleSerializer(many=True, required=False)
+     phone_number = PhoneNumberSerializer()
      user = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
