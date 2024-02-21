@@ -22,6 +22,5 @@ urlpatterns = [
     path('auth/gallery/<str:pk>/', views.GalleryGetUpdateView.as_view(), name="create-gallery"),
     path('auth/question/<str:pk>/', views.QuestionGetUpdateView.as_view(), name="create-question"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
-    path('auth/pay/', views.PayApiView.as_view(), name="100paycode"),
-    path('verify-payment/', views.VerifyAPIView.as_view(), name="Verify"),
+    
 ]

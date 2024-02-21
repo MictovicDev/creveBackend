@@ -102,7 +102,7 @@ class TalentProfileSerializer(serializers.ModelSerializer):
      gallery = GallerySerializer(read_only=True)
      questions = QuestionSerializer(read_only=True,many=True)
      work_type = WorkTypeSerializer(read_only=True,many=True)
-     work_schedule = WorkScheduleSerializer(many=True)
+     work_schedule = WorkScheduleSerializer(many=True, required=False)
      user = serializers.PrimaryKeyRelatedField(read_only=True)
 
 
@@ -113,6 +113,16 @@ class TalentProfileSerializer(serializers.ModelSerializer):
     
          
 class UserUpdateSerializer(serializers.ModelSerializer):
+     id = serializers.UUIDField(read_only=True,)
+     email = serializers.EmailField(read_only=True)
+     fullname = serializers.CharField()
+     
+
+     class Meta:
+        model = User
+        fields = ('id','email','fullname',)
+
+class TalentUpdateSerializer(serializers.ModelSerializer):
      id = serializers.UUIDField(read_only=True,)
      email = serializers.EmailField(read_only=True)
      fullname = serializers.CharField()
