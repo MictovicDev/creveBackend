@@ -135,6 +135,7 @@ class TalentProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     lookup_field = 'pk'
 
     def talentprofile_update(self,serializer):
+        print(serializer.validated_data)
         instance = serializer.save()
 
 class SkillGetUpdateView(generics.ListCreateAPIView):

@@ -79,7 +79,7 @@ class TalentProfile(models.Model):
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
-    phone_number = PhoneNumberField(blank=True, null=True)
+    phone_number = models.CharField(max_length=250, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
     website_link = models.URLField(blank=True, null=True)
     resume_link = models.URLField(blank=True, null=True)

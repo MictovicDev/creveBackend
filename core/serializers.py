@@ -98,8 +98,10 @@ class WorkScheduleSerializer(serializers.ModelSerializer):
         model = WorkSchedule
         fields = '__all__'
 
+print(dir(PhoneNumberField))
+
 class PhoneNumberSerializer(serializers.Serializer):
-    number = PhoneNumberField(region="CA")
+    number = PhoneNumberField()
 
 class TalentProfileSerializer(serializers.ModelSerializer):
      skills = SkillSerializer(read_only=True,many=True)
