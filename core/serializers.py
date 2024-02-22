@@ -21,7 +21,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
          profile_pics = user.clientprofile.profile_pics.url
          token['profile_id'] = user.clientprofile.id
       elif user.role == 'Talent':
-         profile_pics = user.talentprofile.profile_pics.url
+         if user.talentprofile.profile_pics:
+             profile_pics = user.talentprofile.profile_pics.url
+         else:
+             profile_pics = ''
          token['profile_id'] = user.talentprofile.id
       token['profile_pics'] = 'https://creve.onrender.com' + profile_pics
       return token
@@ -109,7 +112,7 @@ class TalentProfileSerializer(serializers.ModelSerializer):
      questions = QuestionSerializer(read_only=True,many=True)
      work_type = WorkTypeSerializer(read_only=True,many=True)
      work_schedule = WorkScheduleSerializer(many=True, required=False)
-     phone_number = PhoneNumberSerializer()
+     phone_number = serializers.CharField(required=False)
      user = serializers.PrimaryKeyRelatedField(read_only=True)
 
 

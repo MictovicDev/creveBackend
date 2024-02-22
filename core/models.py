@@ -73,6 +73,7 @@ class TalentProfile(models.Model):
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True, null=True)
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
+    about = models.CharField(max_length=250, blank=True, null=True)
     nondigital_skills = models.CharField(max_length=250, choices=NonDigitalSkills, blank=True, null=True)
     display_name = models.CharField(max_length=100,blank=True, null=True)
     category = models.CharField(max_length=250, blank=True, null=True, choices=CATEGORY_TYPE)
