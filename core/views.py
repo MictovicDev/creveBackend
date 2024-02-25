@@ -147,14 +147,16 @@ class SkillListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         if serializer.is_valid():
             # pk = self.request.user.id
+            print(serializer.validated_data)
             pk = self.kwargs['pk']
             profile = TalentProfile.objects.get(id=pk)
             skills = serializer.validated_data.get('skill_list').get('skills')
-            new_skills = []
+            print(skills)
             for skill in skills:
-                c_skill = Skills.objects.create(skill=skill, talent_profile=profile)
-                new_skills.append(c_skill)
+                c_skill = Skills.objects.create(skill=skill)
+                profile.skills.add(c_skill)
                 c_skill.save()
+                profile.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
                 
         
@@ -165,7 +167,6 @@ class GalleryGetUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Skills.objects.all()
     serializer_class = SkillSerializer
-
 
 
 

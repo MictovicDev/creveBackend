@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser,PermissionsMixin)
 import uuid
 from .managers import UserManager
+from django.contrib.postgres.fields import ArrayField
 # from phonenumber_field.modelfields import PhoneNumberField
 # from core.models import Project
 
