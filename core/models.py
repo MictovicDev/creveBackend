@@ -8,8 +8,6 @@ from .managers import UserManager
 
 
 
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('Client', 'Client'),

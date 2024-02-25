@@ -139,14 +139,16 @@ class TalentProfileGetUpdateView(generics.RetrieveUpdateAPIView):
         print(serializer.validated_data)
         instance = serializer.save()
 
-class SkillGetUpdateView(generics.ListCreateAPIView):
+class SkillListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Skills.objects.all()
     serializer_class = SkillSerializer
 
     def perform_create(self, serializer):
         if serializer.is_valid():
+            # pk = self.request.user.id
             pk = self.kwargs['pk']
+            print(dir(self))
             profile = TalentProfile.objects.get(id=pk)
             skills = serializer.validated_data.get('skill_list').get('skills')
             new_skills = []
