@@ -148,7 +148,6 @@ class SkillListCreateView(generics.ListCreateAPIView):
         if serializer.is_valid():
             # pk = self.request.user.id
             pk = self.kwargs['pk']
-            print(dir(self))
             profile = TalentProfile.objects.get(id=pk)
             skills = serializer.validated_data.get('skill_list').get('skills')
             new_skills = []
