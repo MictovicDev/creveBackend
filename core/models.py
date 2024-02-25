@@ -86,7 +86,7 @@ class TalentProfile(models.Model):
         ('Non-DigitalSkills', 'Non-DigitalSkills'),
     )
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True, null=True)
-    d_skills = models.ManyToManyField(Skills)
+    skills = models.ManyToManyField(Skills)
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     about = models.CharField(max_length=250, blank=True, null=True)
@@ -98,15 +98,15 @@ class TalentProfile(models.Model):
     language = models.CharField(max_length=250,blank=True, null=True)
     phone_number = models.CharField(max_length=250, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
-    website_link = models.URLField(blank=True, null=True)
-    resume_link = models.URLField(blank=True, null=True)
-    linked_in_url = models.URLField(blank=True, null=True)
-    facebook_url = models.URLField(blank=True, null=True)
-    x_url = models.URLField(blank=True, null=True)
-    instagram_url = models.URLField(blank=True, null=True)
-    github_url = models.URLField(blank=True, null=True)
-    behance_url = models.URLField(blank=True, null=True)
-    medium_url = models.URLField(blank=True,null=True)
+    whatsapp_link = models.URLField(blank=True, null=True)
+    # resume_link = models.URLField(blank=True, null=True)
+    # linked_in_url = models.URLField(blank=True, null=True)
+    # facebook_url = models.URLField(blank=True, null=True)
+    # x_url = models.URLField(blank=True, null=True)
+    # instagram_url = models.URLField(blank=True, null=True)
+    # github_url = models.URLField(blank=True, null=True)
+    # behance_url = models.URLField(blank=True, null=True)
+    # medium_url = models.URLField(blank=True,null=True)
 
 
 
