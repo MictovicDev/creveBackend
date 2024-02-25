@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'creveBackend.wsgi.application'
 
 DATABASES = {}
 
-DATABASES["default"]=dj_database_url.parse('postgres://creveafrica_user:KZjM9CkmaTk7M96sbmEq29UYCZnBPbvB@dpg-cmcqsu021fec73ctsvpg-a.oregon-postgres.render.com/creveafrica')
+DATABASES["default"]=dj_database_url.parse('postgres://crevedb_user:6XSIC0Saks4swYX7yMCzdWsVtJFLcZ5J@dpg-cndjdsda73kc73b76ue0-a.oregon-postgres.render.com/crevedb')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

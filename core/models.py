@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser,PermissionsMixin)
 import uuid
 from .managers import UserManager
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
 # from core.models import Project
 
 
@@ -45,6 +45,22 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
 
+
+   
+class Skills(models.Model):
+    skills = (
+        ('web-development', 'web-development'),
+        ('Javascript', 'Javascript'),
+        ('React', 'React'),
+        ('HTML', 'HTML'),
+        ('CSS', 'CSS'),
+        ('Django', 'Django'),
+        ('Flask','Flask')
+    )
+    skill = models.CharField(max_length=250, blank=True, null=True, choices=skills)
+
+
+
 class TalentProfile(models.Model):
     NonDigitalSkills = (
         ('Plumber','Plumber'),
@@ -71,6 +87,7 @@ class TalentProfile(models.Model):
         ('Non-DigitalSkills', 'Non-DigitalSkills'),
     )
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True, null=True)
+    d_skills = models.ManyToManyField(Skills)
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     about = models.CharField(max_length=250, blank=True, null=True)
@@ -98,18 +115,8 @@ class TalentProfile(models.Model):
     def __str__(self):
         return f"{self.user.fullname}'s  Profile"
     
-class Skills(models.Model):
-    Skills = (
-        ('web-development', 'web-development'),
-        ('Javascript', 'Javascript'),
-        ('React', 'React'),
-        ('HTML', 'HTML'),
-        ('CSS', 'CSS'),
-        ('Django', 'Django'),
-        ('Flask','Flask')
-    )
-    skill = models.CharField(max_length=250, blank=True, null=True, choices=Skills)
-    talent_profile = models.ForeignKey(TalentProfile, blank=True, null=True, on_delete=models.CASCADE, related_name='skills')
+ 
+    # talent_profile = models.ForeignKey(TalentProfile, blank=True, null=True, on_delete=models.CASCADE, related_name='skills')
     
 
     

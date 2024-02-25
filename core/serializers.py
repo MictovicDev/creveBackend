@@ -71,11 +71,11 @@ class ClientProfileSerializer(serializers.ModelSerializer):
 
 class SkillSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False,read_only=True)
-    skill_list = serializers.JSONField(write_only=True)
+    # skill_list = serializers.JSONField(write_only=True)
 
     class Meta:
         model = Skills
-        fields = ('id','skill','skill_list')
+        fields = ('id','skill',)
 
     
 
@@ -101,10 +101,8 @@ class WorkScheduleSerializer(serializers.ModelSerializer):
         model = WorkSchedule
         fields = '__all__'
 
-print(dir(PhoneNumberField))
 
-class PhoneNumberSerializer(serializers.Serializer):
-    number = PhoneNumberField()
+
 
 class TalentProfileSerializer(serializers.ModelSerializer):
      skills = SkillSerializer(read_only=True,many=True)
