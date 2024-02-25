@@ -17,7 +17,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     fullname = models.CharField(max_length=250,blank=True, null=True)
-    phone_number = models.PositiveBigIntegerField(null=True)
     email = models.EmailField(verbose_name='email address',max_length=255,unique=True,)
     is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
@@ -48,16 +47,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
    
 class Skills(models.Model):
-    skills = (
-        ('web-development', 'web-development'),
-        ('Javascript', 'Javascript'),
-        ('React', 'React'),
-        ('HTML', 'HTML'),
-        ('CSS', 'CSS'),
-        ('Django', 'Django'),
-        ('Flask','Flask')
-    )
-    skill = models.CharField(max_length=250, blank=True, null=True, choices=skills)
+    # skills = (
+    #     ('web-development', 'web-development'),
+    #     ('Javascript', 'Javascript'),
+    #     ('React', 'React'),
+    #     ('HTML', 'HTML'),
+    #     ('CSS', 'CSS'),
+    #     ('Django', 'Django'),
+    #     ('Flask','Flask')
+    # )
+    skill = models.CharField(max_length=250, blank=True, null=True)
 
 
 

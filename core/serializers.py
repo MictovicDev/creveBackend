@@ -6,7 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers,response,status
 from django.contrib.auth.password_validation import validate_password
 from core.models import *
-from phonenumber_field.serializerfields import PhoneNumberField
+
 import re
 
 
@@ -71,6 +71,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
 
 class SkillSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False,read_only=True)
+    skill = serializers.CharField()
     # skill_list = serializers.JSONField(write_only=True)
 
     class Meta:
