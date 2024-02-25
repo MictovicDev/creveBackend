@@ -92,25 +92,21 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ['id', 'question','question_list']
 
-class WorkTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = WorkType
-        fields = ('work_type',)
+# class WorkTypeSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = WorkType
+#         fields = ('work_type',)
 
-class WorkScheduleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = WorkSchedule
-        fields = '__all__'
-
-
+# class WorkScheduleSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = WorkSchedule
+#         fields = '__all__'
 
 
 class TalentProfileSerializer(serializers.ModelSerializer):
      skills = SkillSerializer(read_only=True,many=True)
      gallery = GallerySerializer(read_only=True)
      questions = QuestionSerializer(read_only=True,many=True)
-     work_type = WorkTypeSerializer(read_only=True,many=True)
-     work_schedule = WorkScheduleSerializer(many=True, required=False)
      phone_number = serializers.CharField(required=False)
      user = serializers.PrimaryKeyRelatedField(read_only=True)
 

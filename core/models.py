@@ -99,7 +99,9 @@ class TalentProfile(models.Model):
     phone_number = models.CharField(max_length=250, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
     whatsapp_link = models.URLField(blank=True, null=True)
-    # resume_link = models.URLField(blank=True, null=True)
+    resume_link = models.URLField(blank=True, null=True)
+    website_link = models.URLField(blank=True, null=True)
+    
     # linked_in_url = models.URLField(blank=True, null=True)
     # facebook_url = models.URLField(blank=True, null=True)
     # x_url = models.URLField(blank=True, null=True)
