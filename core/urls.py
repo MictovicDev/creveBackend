@@ -13,6 +13,7 @@ urlpatterns = [
     path('api', views.DocumentApi.as_view(), name="endpoints" ),
     path('auth/user/', views.ClientView.as_view(), name='client_signup'),
     path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
+    path('auth/questions/<str:pk>/', views.QuestionListCreateView.as_view(), name='question-create'),
     path('auth/userprofile/', views.ClientProfileGetView.as_view(), name="usersprofile"),
     path('auth/user/<str:pk>/', views.ClientUpdateGetDeleteView.as_view(), name="clientupdate"),
     path('auth/userprofile/<str:pk>/', views.ClientProfileGetUpdateView.as_view(), name="userprofileupdate"),
@@ -20,7 +21,7 @@ urlpatterns = [
     path('auth/creativeprofile/<str:pk>/', views.TalentProfileGetUpdateView.as_view(), name="creativeprofile"),
     path('auth/skills/<str:pk>/', views.SkillListCreateView.as_view(), name="create-skill"),
     path('auth/gallery/<str:pk>/', views.GalleryGetUpdateView.as_view(), name="create-gallery"),
-    path('auth/question/<str:pk>/', views.QuestionGetUpdateView.as_view(), name="create-question"),
+    # path('auth/question/<str:pk>/', views.QuestionGetUpdateView.as_view(), name="create-question"),
     path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
     
 ]

@@ -46,16 +46,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
    
 class Skills(models.Model):
-    # skills = (
-    #     ('web-development', 'web-development'),
-    #     ('Javascript', 'Javascript'),
-    #     ('React', 'React'),
-    #     ('HTML', 'HTML'),
-    #     ('CSS', 'CSS'),
-    #     ('Django', 'Django'),
-    #     ('Flask','Flask')
-    # )
     skill = models.CharField(max_length=250, blank=True, null=True)
+
+
+class Gallery (models.Model):
+    image = models.ImageField(upload_to='files/images',blank=True, null=True)
+    
+
+    def __str__(self):
+        return self.image.url
 
 
 
@@ -86,6 +85,7 @@ class TalentProfile(models.Model):
     )
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True, null=True)
     skills = models.ManyToManyField(Skills)
+    images = models.ManyToManyField(Gallery)
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     about = models.CharField(max_length=250, blank=True, null=True)
@@ -101,16 +101,6 @@ class TalentProfile(models.Model):
     resume_link = models.URLField(blank=True, null=True)
     website_link = models.URLField(blank=True, null=True)
     
-    # linked_in_url = models.URLField(blank=True, null=True)
-    # facebook_url = models.URLField(blank=True, null=True)
-    # x_url = models.URLField(blank=True, null=True)
-    # instagram_url = models.URLField(blank=True, null=True)
-    # github_url = models.URLField(blank=True, null=True)
-    # behance_url = models.URLField(blank=True, null=True)
-    # medium_url = models.URLField(blank=True,null=True)
-
-
-
 
     def __str__(self):
         return f"{self.user.fullname}'s  Profile"
@@ -121,19 +111,9 @@ class TalentProfile(models.Model):
 
     
 
-
-
-
-class Gallery (models.Model):
-    images = models.ImageField(upload_to='files/images',blank=True, null=True)
-    d_profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True,related_name='gallery')
-
-    def __str__(self):
-        return self.image.url
-
-
 class Question(models.Model):
     question = models.CharField(max_length=5000, blank=True, null=True)
+    answer = models.TextField(blank=True,null=True)
     talent_profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='questions')
 
 

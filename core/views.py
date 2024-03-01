@@ -151,17 +151,37 @@ class SkillListCreateView(generics.ListCreateAPIView):
             pk = self.kwargs['pk']
             profile = TalentProfile.objects.get(id=pk)
             skills = serializer.validated_data.get('skill_list').get('skills')
-            print(skills)
+            # print(serializer.validated_data.get('skill_list').get())
+            print(type(skills))
             for skill in skills:
                 c_skill = Skills.objects.create(skill=skill)
                 profile.skills.add(c_skill)
                 c_skill.save()
                 profile.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+
+class GalleryListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializer
+
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            # pk = self.request.user.id
+            print(serializer.validated_data)
+            pk = self.kwargs['pk']
+            profile = TalentProfile.objects.get(id=pk)
+            images = serializer.validated_data.get('image_list').get('images')
+            print(images)
+            for image in images:
+                gallery = Gallery.objects.create(image=image)
+                profile.images.add(gallery)
+                gallery.save()
+                profile.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
                 
         
-
-
 
 class GalleryGetUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -170,21 +190,40 @@ class GalleryGetUpdateView(generics.RetrieveUpdateAPIView):
 
 
 
-class QuestionGetUpdateView(generics.ListCreateAPIView):
+class QuestionListCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    
+
+
     def perform_create(self, serializer):
         if serializer.is_valid():
+            print(serializer.data)
             pk = self.kwargs['pk']
-            profile = TalentProfile.objects.get(id=pk)
-            questions = serializer.validated_data.get('question_list').get('question')
-            new_question = []
-            for question in questions:
-                freq_a_question = Question.objects.create(question=question, talent_profile=profile)
-                freq_a_question.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+            try:
+                profile = TalentProfile.objects.get(id=pk)
+            except:
+                return Response({"message": "profile does not exist"})
+            quest = serializer.validated_data['question']
+            answer = serializer.validated_data['answer']
+            question = Question.objects.create(question=quest, answer=answer,talent_profile=profile)
+            question.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            
+
+
+    
+    # def perform_create(self, serializer):
+    #     if serializer.is_valid():
+    #         pk = self.kwargs['pk']
+    #         profile = TalentProfile.objects.get(id=pk)
+    #         questions = serializer.validated_data.get('question_list').get('question')
+    #         new_question = []
+    #         for question in questions:
+    #             freq_a_question = Question.objects.create(question=question, talent_profile=profile)
+    #             freq_a_question.save()
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 
