@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'creveBackend.wsgi.application'
 
 DATABASES = {}
 
-DATABASES["default"]=dj_database_url.parse('postgres://crevedb_user:6XSIC0Saks4swYX7yMCzdWsVtJFLcZ5J@dpg-cndjdsda73kc73b76ue0-a.oregon-postgres.render.com/crevedb')
+DATABASES["default"]=dj_database_url.parse('postgres://creve_db_ms14_user:MJCYbJf0gifV4ekM1NRxhdDHztmd2huF@dpg-cnl3ubud3nmc73evvpdg-a.oregon-postgres.render.com/creve_db_ms14gi')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -138,7 +138,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': '-tneUT5fN57OeUIu-nwE0VdEXS8'
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': (

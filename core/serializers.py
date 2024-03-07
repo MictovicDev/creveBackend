@@ -92,16 +92,6 @@ class GallerySerializer(serializers.ModelSerializer):
         fields = ('images',)
 
 
-# class WorkTypeSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = WorkType
-#         fields = ('work_type',)
-
-# class WorkScheduleSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = WorkSchedule
-#         fields = '__all__'
-
 
 class TalentProfileSerializer(serializers.ModelSerializer):
      skills = SkillSerializer(read_only=True,many=True)
@@ -116,9 +106,6 @@ class TalentProfileSerializer(serializers.ModelSerializer):
          fields = '__all__'
 
 
-
-      
-    
          
 class UserUpdateSerializer(serializers.ModelSerializer):
      id = serializers.UUIDField(read_only=True,)
@@ -140,6 +127,13 @@ class TalentUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','email','fullname',)
     
+class ReviewSerializer(serializers.ModelSerializer):
+    reviewer = serializers.PrimaryKeyRelatedField(read_only=True)
+    reviewed = serializers.PrimaryKeyRelatedField(read_only=True)
+    
+    class Meta:
+        model = Review
+        fields = ('reviewer','reviewed','content','image','relevant_link',)
 
     
      

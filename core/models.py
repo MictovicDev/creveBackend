@@ -59,6 +59,11 @@ class Gallery (models.Model):
 
 
 class TalentProfile(models.Model):
+    worktype = (
+        ('Remote', 'Remote'),
+        ('On-site', 'On-site'),
+        ('Hybrid', 'Hybrid'),
+    )
     NonDigitalSkills = (
         ('Plumber','Plumber'),
         ('Civil-Engineer', 'Civil-Engineer'),
@@ -84,6 +89,8 @@ class TalentProfile(models.Model):
         ('Non-DigitalSkills', 'Non-DigitalSkills'),
     )
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True, null=True)
+    work_type = models.CharField(max_length=500, blank=True, null=True, choices=worktype)
+    verified = models.BooleanField(default=False)
     skills = models.ManyToManyField(Skills)
     images = models.ManyToManyField(Gallery)
     summary_of_profile = models.TextField(blank=True, null=True)
@@ -109,7 +116,24 @@ class TalentProfile(models.Model):
     # talent_profile = models.ForeignKey(TalentProfile, blank=True, null=True, on_delete=models.CASCADE, related_name='skills')
     
 
+class ClientProfile(models.Model):
     
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
+
+
+    def __str__(self):
+        return f"{self.user.fullname}'s  Profile"
+
+
+class Review(models.Model):
+    content = models.TextField()
+    image = models.ImageField(upload_to='files/images',blank=True, null=True)
+    reviewer = models.ForeignKey(ClientProfile, on_delete=models.CASCADE,blank=True, null=True)
+    reviewed = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True)
+    relevant_link = models.URLField(blank=True, null=True)
+
+   
 
 class Question(models.Model):
     question = models.CharField(max_length=5000, blank=True, null=True)
@@ -121,27 +145,16 @@ class Question(models.Model):
         return self.question
 
 
-class WorkType(models.Model):
-    worktype_choice = (
-        ('Remote', 'Remote'),
-        ('On-site', 'On-site'),
-        ('Hybrid', 'Hybrid'),
-    )
-    work_type = models.CharField(max_length=250, blank=True, null=True, choices=worktype_choice)
-    profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,related_name='work_type')
-
-    def __str__(self):
-        return self.work
-
-
-class ClientProfile(models.Model):
+# class WorkType(models.Model):
     
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
+#     work_type = models.CharField(max_length=250, blank=True, null=True, choices=worktype_choice)
+#     profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,related_name='work_type')
+
+#     def __str__(self):
+#         return self.work
 
 
-    def __str__(self):
-        return f"{self.user.fullname}'s  Profile"
+
     
 
 
