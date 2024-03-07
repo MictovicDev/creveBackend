@@ -167,18 +167,13 @@ class ReviewCreateView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            print(serializer.validated_data)
             content = serializer.validated_data['content']
-            print(content)
-            print(self.request.user)
             reviewer = self.request.user
             clientprofile = ClientProfile.objects.get(user=reviewer)
             image = serializer.validated_data['image']
-            print(image)
             relevant_link = serializer.validated_data['relevant_link']
             pk = self.kwargs['pk']
             talentprofile = TalentProfile.objects.get(id=pk)
-            print(talentprofile)
             review = Review.objects.create(content=content,image=image, relevant_link=relevant_link, reviewer=clientprofile,reviewed=talentprofile)
             review.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
