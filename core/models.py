@@ -117,7 +117,6 @@ class TalentProfile(models.Model):
     
 
 class ClientProfile(models.Model):
-    
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
 
@@ -130,7 +129,7 @@ class Review(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='files/images',blank=True, null=True)
     reviewer = models.ForeignKey(ClientProfile, on_delete=models.CASCADE,blank=True, null=True)
-    reviewed = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True)
+    reviewed = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True,related_name='reviewed')
     relevant_link = models.URLField(blank=True, null=True)
 
    
@@ -154,29 +153,31 @@ class Question(models.Model):
 #         return self.work
 
 
+class Notification(models.Model):
+    
 
     
 
 
-class WorkSchedule(models.Model):
-    day_choices = [
-        ('Sunday', 'Sunday'),
-        ('Monday', 'Monday'),
-        ('Tuesday', 'Tuesday'),
-        ('Wednesday', 'Wednesday'),
-        ('Thursday', 'Thursday'),
-        ('Friday', 'Friday'),
-        ('Saturday', 'Saturday')
-    ]
+# class WorkSchedule(models.Model):
+#     day_choices = [
+#         ('Sunday', 'Sunday'),
+#         ('Monday', 'Monday'),
+#         ('Tuesday', 'Tuesday'),
+#         ('Wednesday', 'Wednesday'),
+#         ('Thursday', 'Thursday'),
+#         ('Friday', 'Friday'),
+#         ('Saturday', 'Saturday')
+#     ]
 
 
-    day = models.CharField(max_length=500, blank=True, null=True, choices=day_choices)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    talent_profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True,null=True, related_name='work_schedule')
+#     day = models.CharField(max_length=500, blank=True, null=True, choices=day_choices)
+#     start_time = models.TimeField()
+#     end_time = models.TimeField()
+#     talent_profile = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True,null=True, related_name='work_schedule')
 
-    def __str__(self):
-        return f"{self.day} - {self.start_time.strftime('%I:%M %p')} to {self.end_time.strftime('%I:%M %p').replace('AM', 'PM')}"
+#     def __str__(self):
+#         return f"{self.day} - {self.start_time.strftime('%I:%M %p')} to {self.end_time.strftime('%I:%M %p').replace('AM', 'PM')}"
 
     
 

@@ -128,12 +128,12 @@ class TalentUpdateSerializer(serializers.ModelSerializer):
         fields = ('id','email','fullname',)
     
 class ReviewSerializer(serializers.ModelSerializer):
-    reviewer = serializers.PrimaryKeyRelatedField(read_only=True)
-    reviewed = serializers.PrimaryKeyRelatedField(read_only=True)
+    reviewer = ClientProfileSerializer(read_only=True)
+    reviewed = TalentProfileSerializer(read_only=True)
     
     class Meta:
         model = Review
-        fields = ('reviewer','reviewed','content','image','relevant_link',)
+        fields = ['id','reviewer','reviewed','content','image','relevant_link']
 
     
      
