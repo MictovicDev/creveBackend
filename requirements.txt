@@ -56,3 +56,4 @@ whitenoise==6.5.0
 cloudinary
 django_cloudinary_storage
 daphne
+channels
