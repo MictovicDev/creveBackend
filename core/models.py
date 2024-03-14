@@ -132,7 +132,9 @@ class Review(models.Model):
     reviewed = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, blank=True, null=True,related_name='reviewed')
     relevant_link = models.URLField(blank=True, null=True)
 
-   
+
+
+
 
 class Question(models.Model):
     question = models.CharField(max_length=5000, blank=True, null=True)
@@ -153,7 +155,7 @@ class Question(models.Model):
 #         return self.work
 
 
-class Notification(models.Model):
+# class Notification(models.Model):
     
 
     
