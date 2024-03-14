@@ -3,8 +3,7 @@ from django.contrib.auth.models import (AbstractBaseUser,PermissionsMixin)
 import uuid
 from .managers import UserManager
 from django.contrib.postgres.fields import ArrayField
-# from phonenumber_field.modelfields import PhoneNumberField
-# from core.models import Project
+
 
 
 
@@ -117,7 +116,7 @@ class TalentProfile(models.Model):
     
 
 class ClientProfile(models.Model):
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='files/images/default.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
 
 
