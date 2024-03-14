@@ -27,11 +27,13 @@ AUTH_USER_MODEL = "core.User"
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
     'core',
     'corsheaders',
@@ -109,6 +111,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+ASGI_APPLICATION = "creveBackend.asgi.application"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

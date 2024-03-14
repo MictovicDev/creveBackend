@@ -5,9 +5,6 @@ from .managers import UserManager
 from django.contrib.postgres.fields import ArrayField
 
 
-
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('Client', 'Client'),
@@ -40,10 +37,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_staff(self):
         return self.is_admin
+    
 
 
 
-   
 class Skills(models.Model):
     skill = models.CharField(max_length=250, blank=True, null=True)
 
@@ -110,6 +107,9 @@ class TalentProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.fullname}'s  Profile"
+    
+
+    
     
  
     # talent_profile = models.ForeignKey(TalentProfile, blank=True, null=True, on_delete=models.CASCADE, related_name='skills')

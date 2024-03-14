@@ -22,6 +22,7 @@ urlpatterns = [
     path('creativeprofile/<str:pk>/', views.TalentProfileGetUpdateView.as_view(), name="creativeprofile"),
     path('skills/<str:pk>/', views.SkillListCreateView.as_view(), name="create-skill"),
     path('reviews/<str:pk>/', views.ReviewCreateView.as_view(), name="create_review"),
+    path('notifications/', views.notifications, name="notification"),
     path('gallery/<str:pk>/', views.GalleryGetUpdateView.as_view(), name="create-gallery"),
       
 ]

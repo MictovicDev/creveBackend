@@ -55,3 +55,4 @@ watchdog==3.0.0
 whitenoise==6.5.0
 cloudinary
 django_cloudinary_storage
+daphne

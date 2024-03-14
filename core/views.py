@@ -250,6 +250,9 @@ class QuestionListCreateView(generics.CreateAPIView):
 
 
 
+def notifications(request):
+    return render(request, "core/ws.html")
+
 
 class DocumentApi(APIView):
     permission_classes = [permissions.AllowAny]
