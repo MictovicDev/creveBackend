@@ -8,6 +8,10 @@
     <h4>Welcome</h4>
     <script>
         const socket = new WebSocket('ws://localhost:8000/ws/notifications/');
+        socket.onopen = function(event) {
+            console.log(event)
+            console.log("established")
+        };
     </script>
 </body>
     
