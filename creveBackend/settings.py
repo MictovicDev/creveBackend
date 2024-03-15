@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 
-# CSRF_TRUSTED_ORIGINS = ['https://creve.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://creve.onrender.com']
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
