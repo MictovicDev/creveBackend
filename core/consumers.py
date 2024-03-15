@@ -8,8 +8,9 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         print("connected")
         # Accept the WebSocket connection
-        await self.accept()
+        
         await self.channel_layer.group_add("notifications", self.channel_name)
+        await self.accept()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard("notifications", self.channel_name)
@@ -19,16 +20,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         # Handle incoming WebSocket messages
         pass
 
-    @database_sync_to_async
-    def get_latest_client_notification(self):
-        # Retrieve the latest notification from the database
-        return ClientNotification.objects.latest('date')
-    
-
-    @database_sync_to_async
-    def get_latest_talent_notification(self):
-        # Retrieve the latest notification from the database
-        return TalentNotification.objects.latest('date')
     
     async def send_client_notification(self, event):
         # Send notification message to the WebSocket group
