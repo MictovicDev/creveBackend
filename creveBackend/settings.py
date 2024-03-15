@@ -211,9 +211,6 @@ SIMPLE_JWT = {
 CORS_ALLOW_CREDENTIALS = True
 
 
-
-
-
 CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:3000",
     "https://creve.vercel.app",
@@ -226,14 +223,14 @@ MEDIA_URL = '/media/'
 
 
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
+#         },
+#     },
+# }
 
 
 
