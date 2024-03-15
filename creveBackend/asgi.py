@@ -31,6 +31,8 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 import creveBackend.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'creveBackend.settings')
+import django
+django.setup()
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
