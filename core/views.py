@@ -11,11 +11,15 @@ from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
 from rest_framework.views import APIView
 from core.models import *
 from . import email
+from django.dispatch import receiver
 import requests
 from . import urls
 from core.serializers import *
+from django.db.models.signals import post_save
 from .models import TalentProfile
-# Create your views here.
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 
 
 
@@ -264,7 +268,20 @@ class DocumentApi(APIView):
         return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
    
-
+@receiver(post_save, sender=TalentProfile)
+def clientnotification(sender, instance, created, **kwargs):
+    if created:
+        clientnotification = ClientNotification.objects.create(title= f"A New Talent  {instance.user.fullname} just joined Creve")
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "notifications",
+            {
+                'type': 'send_client_notification',
+                'notification': clientnotification
+            }
+        )
+    
+    
 
         
            
