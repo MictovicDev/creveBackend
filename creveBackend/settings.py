@@ -23,8 +23,7 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = "core.User"
 
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "creveBackend.settings")
-settings.configure()
+
 
 # Application definition
 
