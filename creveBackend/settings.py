@@ -28,13 +28,13 @@ AUTH_USER_MODEL = "core.User"
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'daphne',
     'django.contrib.staticfiles',
     'core',
     'corsheaders',
@@ -116,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-ASGI_APPLICATION = "creveBackend.asgi.application"
 
 
 # CSRF_TRUSTED_ORIGINS = ['https://creve.onrender.com']
@@ -223,14 +222,14 @@ MEDIA_URL = '/media/'
 
 
 
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
-#         },
-#     },
-# }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
+        },
+    },
+}
 
 
 
@@ -243,6 +242,10 @@ EMAIL_HOST_USER = 'creveafrica@gmail.com'
 EMAIL_HOST_PASSWORD = 'twghejmkuvptltrv'
 DEFAULT_FROM_USER = 'creveafrica@gmail.com'
 SERVER_EMAIL =  'creveafrica@gmail.com' 
+
+
+
+ASGI_APPLICATION = "creveBackend.asgi.application"
 
 # www.tum.de
 # www.uni-bonn.de/en
