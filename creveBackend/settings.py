@@ -82,19 +82,22 @@ WSGI_APPLICATION = 'creveBackend.wsgi.application'
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
-# DATABASES = {}
+DATABASES = {}
 
-# DATABASES["default"]=dj_database_url.parse('postgres://creve_db_ms14_user:MJCYbJf0gifV4ekM1NRxhdDHztmd2huF@dpg-cnl3ubud3nmc73evvpdg-a.oregon-postgres.render.com/creve_db_ms14')
+DATABASES["default"]=dj_database_url.parse('postgres://creve_db_ms14_user:MJCYbJf0gifV4ekM1NRxhdDHztmd2huF@dpg-cnl3ubud3nmc73evvpdg-a.oregon-postgres.render.com/creve_db_ms14')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+
+
+CSRF_TRUSTED_ORIGINS = ['https://creve.onrender.com']
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -135,8 +138,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_TRUSTED_ORIGINS = ['https://creve.onrender.com']
-
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dr6bsrdid',
@@ -146,8 +147,6 @@ CLOUDINARY_STORAGE = {
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-
-print("hello")
 REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -231,7 +230,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [('red-cnp46h7109ks73es96r0', 6379)],
+            "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
         },
     },
 }
