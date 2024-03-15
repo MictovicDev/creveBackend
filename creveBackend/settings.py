@@ -223,6 +223,18 @@ MEDIA_URL = '/media/'
 
 
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
+        },
+    },
+}
+
+
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
