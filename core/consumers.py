@@ -1,7 +1,7 @@
 # consumers.py
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from core.models import *
+# from core.models import *
 import json
 
 class NotificationConsumer(AsyncWebsocketConsumer):
