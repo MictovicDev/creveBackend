@@ -98,7 +98,7 @@ DATABASES["default"]=dj_database_url.parse('postgres://creve_db_ms14_user:MJCYbJ
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 
-CSRF_TRUSTED_ORIGINS = ['https://creve.onrender.com']
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -117,6 +117,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 ASGI_APPLICATION = "creveBackend.asgi.application"
+
+
+CSRF_TRUSTED_ORIGINS = ['https://creve.onrender.com']
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -208,11 +211,7 @@ SIMPLE_JWT = {
 CORS_ALLOW_CREDENTIALS = True
 
 
-# CORS_ALLOWED_ORIGINS = [
-#    'http://127.0.0.1:3000',
-# ]
 
-# CORS_ORIGIN_ALLOW_ALL = True
 
 
 CORS_ORIGIN_WHITELIST = [
