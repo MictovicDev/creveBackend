@@ -53,7 +53,7 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from . import routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'creve.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'creveBackend.settings')
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
@@ -62,6 +62,6 @@ application = ProtocolTypeRouter({
             routing.websocket_urlpatterns
         )
     ),
-    # Just HTTP for now. (We can add other protocols later.)
+    
 })
 
