@@ -282,7 +282,7 @@ def clientnotification(sender, instance, created, **kwargs):
                 'title': notification.title,
                 'date': notification.date.strftime('%Y-%m-%d %H:%M:%S')  # Convert date to string in desired format
             }
-        notifications_data.append(notification_dict)
+            notifications_data.append(notification_dict)
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             "clientnotifications",
