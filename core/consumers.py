@@ -1,7 +1,7 @@
 # consumers.py
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-# from core.models import *
+from .models import *
 import json
 
 class ClientNotificationConsumer(AsyncWebsocketConsumer):
@@ -10,6 +10,7 @@ class ClientNotificationConsumer(AsyncWebsocketConsumer):
         # Accept the WebSocket connection
         await self.channel_layer.group_add("clientnotifications", self.channel_name)
         await self.accept()
+
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard("clientnotifications", self.channel_name)
