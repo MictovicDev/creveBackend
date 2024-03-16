@@ -22,19 +22,13 @@ class ClientNotificationConsumer(AsyncWebsocketConsumer):
     
     async def send_client_notification(self, event):
         # Send notification message to the WebSocket group
-        notification = event['clientnotification']
-        await self.send(text_data=json.dumps({
-            'type': 'notification',
-            'notification': notification
-        }))
-
-    async def send_talent_notification(self, event):
-        # Send notification message to the WebSocket group
         notification = event['notification']
         await self.send(text_data=json.dumps({
             'type': 'notification',
             'notification': notification
         }))
+
+  
 
 
 class TalentNotificationConsumer(AsyncWebsocketConsumer):
@@ -55,7 +49,7 @@ class TalentNotificationConsumer(AsyncWebsocketConsumer):
     
     async def send_talent_notification(self, event):
         # Send notification message to the WebSocket group
-        notification = event['talentnotification']
+        notification = event['notification']
         await self.send(text_data=json.dumps({
             'type': 'notification',
             'notification': notification
