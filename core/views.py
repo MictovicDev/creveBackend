@@ -254,8 +254,11 @@ class QuestionListCreateView(generics.CreateAPIView):
 
 
 
-def notifications(request):
+def clientnotifications(request):
     return render(request, "core/ws.html")
+
+def talentnotifications(request):
+    return render(request, "core/tl.html")
 
 
 class DocumentApi(APIView):
@@ -274,15 +277,29 @@ def clientnotification(sender, instance, created, **kwargs):
         clientnotification = ClientNotification.objects.create(title= f"A New Talent  {instance.user.fullname} just joined Creve")
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
-            "notifications",
+            "clientnotifications",
             {
                 'type': 'send_client_notification',
-                'title': clientnotification.title,
-                'date': clientnotification.date,
+                'notification': {"client_notification_title":clientnotification.title,
+                                  "client_notification_date": clientnotification.date}
+            }
+        )
+
+@receiver(post_save, sender=ClientProfile)
+def talentnotification(sender, instance, created, **kwargs):
+    if created:
+        talentnotification = TalentNotification.objects.create(title= f"A New Client {instance.user.fullname} just joined Creve, make your Profile more appealing")
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "talentnotifications",
+            {
+                'type': 'send_talent_notification',
+                'notification': {"talent_notification_title":talentnotification.title,
+                                  "talent_notification_date": talentnotification.date}
             }
         )
     
     
 
         
-           
+    
