@@ -306,6 +306,12 @@ def talentnotification(sender, instance, created, **kwargs):
             }
         )
     
+def notfi(request):
+    clientnotification = ClientNotification.objects.all()
+    return clientnotification
+
+
+
     
 
         
