@@ -281,7 +281,7 @@ def clientnotification(sender, instance, created, **kwargs):
             {
                 'type': 'send_client_notification',
                 'notification': {"client_notification_title":clientnotification.title,
-                                  "client_notification_date": clientnotification.date}
+                                  "client_notification_date": clientnotification.date.strftime('%Y-%m-%d %H:%M:%S') }
             }
         )
 
@@ -295,7 +295,7 @@ def talentnotification(sender, instance, created, **kwargs):
             {
                 'type': 'send_talent_notification',
                 'notification': {"talent_notification_title":talentnotification.title,
-                                  "talent_notification_date": talentnotification.date}
+                                  "talent_notification_date": talentnotification.date.strftime('%Y-%m-%d %H:%M:%S') }
             }
         )
     
