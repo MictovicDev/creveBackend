@@ -274,14 +274,14 @@ class DocumentApi(APIView):
 @receiver(post_save, sender=TalentProfile)
 def clientnotification(sender, instance, created, **kwargs):
     if created:
-        clientnotification = ClientNotification.objects.create(title= f"A New Talent  {instance.user.fullname} just joined Creve")
+        ClientNotification.objects.create(title= f"A New Talent {instance.user.fullname} just joined Creve")
+        notification_data = ClientNotification.objects.all()
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             "clientnotifications",
             {
                 'type': 'send_client_notification',
-                'notification': {"client_notification_title":clientnotification.title,
-                                  "client_notification_date": clientnotification.date.strftime('%Y-%m-%d %H:%M:%S') }
+                'notification': notification_data
             }
         )
 
