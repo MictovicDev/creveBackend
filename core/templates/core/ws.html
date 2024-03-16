@@ -7,7 +7,7 @@
 <body>
     <h4>Welcome</h4>
     <script>
-        const socket = new WebSocket('wss://creve.onrender.com/ws/notifications/');
+        const socket = new WebSocket('wss://creve.onrender.com/ws/clientnotifications/');
         // const socket = new WebSocket('ws://localhost:8000/ws/clientnotifications/')
         socket.onopen = function(event) {
             console.log(event)
