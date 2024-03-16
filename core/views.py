@@ -275,13 +275,20 @@ class DocumentApi(APIView):
 def clientnotification(sender, instance, created, **kwargs):
     if created:
         ClientNotification.objects.create(title= f"A New Talent {instance.user.fullname} just joined Creve")
-        notification_data = ClientNotification.objects.all()
+        notifications_data = []
+        clientsnotification_data = ClientNotification.objects.all()
+        for notification in clientsnotification_data:
+            notification_dict = {
+                'title': notification.title,
+                'date': notification.date.strftime('%Y-%m-%d %H:%M:%S')  # Convert date to string in desired format
+            }
+        notifications_data.append(notification_dict)
         channel_layer = get_channel_layer()
         async_to_sync(channel_layer.group_send)(
             "clientnotifications",
             {
                 'type': 'send_client_notification',
-                'notification': notification_data
+                'notification': notifications_data
             }
         )
 

@@ -133,7 +133,7 @@ class ClientNotification(models.Model):
 
 
     def __str__(self):
-        return self.title[0:10]
+        return self.title
     
 class TalentNotification(models.Model):
     title = models.CharField(max_length=250)
@@ -146,7 +146,7 @@ class TalentNotification(models.Model):
 
 
     def __str__(self):
-        return self.title[0:10]
+        return self.title
     
 
 
