@@ -277,7 +277,8 @@ def clientnotification(sender, instance, created, **kwargs):
             "notifications",
             {
                 'type': 'send_client_notification',
-                'notification': clientnotification.title
+                'title': clientnotification.title,
+                'date': clientnotification.date,
             }
         )
     
