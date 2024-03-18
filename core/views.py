@@ -87,8 +87,8 @@ class ActivateAccount(APIView):
 
 
 
-class ClientNotifications(generics.ListAPIView):
-    pass
+# class ClientNotifications(generics.ListAPIView):
+#     pass
 
 
 class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -105,6 +105,7 @@ class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
         return super().perform_destroy(instance)
     
 class TalentUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
+    print(dir(generics))
     queryset = User.objects.filter(role='Talent')
     lookup_field = 'pk'
     serializer_class = TalentUpdateSerializer
@@ -116,6 +117,9 @@ class TalentUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
     def users_destroy(self, instance):
         return super().perform_destroy(instance)
+    
+# class Question(generics.RetrieveUpdateDestroyAPIView):
+
     
 class ClientProfileGetView(generics.ListAPIView):
     queryset = ClientProfile.objects.all()
@@ -222,11 +226,17 @@ class GalleryGetUpdateView(generics.RetrieveUpdateAPIView):
 
 
 
-class QuestionUpdateDel(generics.RetrieveUpdateAPIView):
+class QuestionUpdateDel(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
     lookup_field = 'pk'
+
+    # def get_queryset(self):
+    #     pk = self.kwargs['pk']
+    #     print(pk)
+    #     questions = Question.objects.filter(talent_profile__id=pk)
+    #     return questions
     
     def question_update(self, serializer):
         instance = serializer.save()
@@ -240,23 +250,25 @@ class QuestionListCreateView(generics.ListCreateAPIView):
     serializer_class = QuestionSerializer
 
     # print(dir(generics.ListAPIView))
-    def get_queryset(self):
-        pk = self.kwargs['pk']
-        print(pk)
-        questions = Question.objects.filter(talent_profile__id=pk)
-        return questions
+    # 
         
     def perform_create(self, serializer):
         if serializer.is_valid():
-            print(serializer.data)
-            pk = self.kwargs['pk']
-            try:
-                profile = TalentProfile.objects.get(id=pk)
-            except:
-                return Response({"message": "profile does not exist"})
+            print(self.request.user.is_authenticated)
+            if self.request.user.is_authenticated:
+                try:
+                    user = self.request.user
+                    print(user)
+                    profile = TalentProfile.objects.get(user=user)
+                    print(profile)
+                except:
+                    return Response({"message": "profile does not exist"})
+            else:
+                return Response({"message": "you must be logged in to create question"})
             quest = serializer.validated_data['question']
             answer = serializer.validated_data['answer']
             question = Question.objects.create(question=quest, answer=answer,talent_profile=profile)
+            print(question)
             question.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)

@@ -254,6 +254,8 @@ SERVER_EMAIL =  'creveafrica@gmail.com'
 
 ASGI_APPLICATION = "creveBackend.asgi.application"
 
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+
 # www.tum.de
 # www.uni-bonn.de/en
 # www.heidelberg.de

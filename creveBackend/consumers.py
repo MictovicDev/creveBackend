@@ -1,16 +1,17 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 # from core.models import *
 import json
 
 class ClientNotificationConsumer(AsyncWebsocketConsumer):
+
     async def connect(self):
-        from core.models import ClientNotification, TalentNotification
         print("connected")
-        database_sync_to_async
         await self.channel_layer.group_add("clientnotifications", self.channel_name)
-        print(self.groups)
-        print(dir(self.scope))
+        result = await self.send_notification()
+        print(result)
         await self.accept()
 
 
@@ -22,7 +23,33 @@ class ClientNotificationConsumer(AsyncWebsocketConsumer):
         # Handle incoming WebSocket messages
         pass
 
+    @database_sync_to_async
+    def get_my_data(self):
+        from core.models import ClientNotification
+        client = ClientNotification.objects.all()
+        return client
     
+    async def send_notification(self):
+        from core.models import ClientNotification
+        channel_layer = get_channel_layer()
+        clientnotification_data = ClientNotification.objects.all()
+        notifications_data = []
+        for notification in clientnotification_data:
+            notification_dict = {
+                'title': notification.title,
+                'date': notification.date.strftime('%Y-%m-%d %H:%M:%S')  # Convert date to string in desired format
+            }
+            notifications_data.append(notification_dict)
+        channel_layer.group_send(
+            "clientnotifications",
+            {
+                'type': 'send_client_notification',
+                'notification': notification
+            }
+        )
+        return notifications_data
+      
+        
     async def send_client_notification(self, event):
         #to access the the notificaton sent by the event
         notification = event['notification']
@@ -30,6 +57,8 @@ class ClientNotificationConsumer(AsyncWebsocketConsumer):
             'type': 'notification',
             'notification': notification
         }))
+
+    
 
   
 
