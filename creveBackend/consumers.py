@@ -1,14 +1,16 @@
-# consumers.py
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-# from core.models import *
+from core.models import *
 import json
 
 class ClientNotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        from core.models import ClientNotification, TalentNotification
         print("connected")
-        # Accept the WebSocket connection
+        database_sync_to_async
         await self.channel_layer.group_add("clientnotifications", self.channel_name)
+        print(self.groups)
+        print(dir(self.scope))
         await self.accept()
 
 
@@ -22,7 +24,7 @@ class ClientNotificationConsumer(AsyncWebsocketConsumer):
 
     
     async def send_client_notification(self, event):
-        # Send notification message to the WebSocket group
+        #to access the the notificaton sent by the event
         notification = event['notification']
         await self.send(text_data=json.dumps({
             'type': 'notification',

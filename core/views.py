@@ -83,6 +83,12 @@ class ActivateAccount(APIView):
         except:
             data = {'message': "User does not exist"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        
+
+
+
+class ClientNotifications(generics.ListAPIView):
+    pass
 
 
 class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -216,12 +222,30 @@ class GalleryGetUpdateView(generics.RetrieveUpdateAPIView):
 
 
 
-class QuestionListCreateView(generics.CreateAPIView):
+class QuestionUpdateDel(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+    lookup_field = 'pk'
+    
+    def question_update(self, serializer):
+        instance = serializer.save()
+
+    def question_destroy(self, instance):
+        return super().perform_destroy(instance)
+
+class QuestionListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
 
-
+    # print(dir(generics.ListAPIView))
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        print(pk)
+        questions = Question.objects.filter(talent_profile__id=pk)
+        return questions
+        
     def perform_create(self, serializer):
         if serializer.is_valid():
             print(serializer.data)
@@ -238,18 +262,6 @@ class QuestionListCreateView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
             
 
-
-    
-    # def perform_create(self, serializer):
-    #     if serializer.is_valid():
-    #         pk = self.kwargs['pk']
-    #         profile = TalentProfile.objects.get(id=pk)
-    #         questions = serializer.validated_data.get('question_list').get('question')
-    #         new_question = []
-    #         for question in questions:
-    #             freq_a_question = Question.objects.create(question=question, talent_profile=profile)
-    #             freq_a_question.save()
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 
@@ -309,6 +321,10 @@ def talentnotification(sender, instance, created, **kwargs):
 def notfi(request):
     clientnotification = ClientNotification.objects.all()
     return clientnotification
+
+
+
+
 
 
 

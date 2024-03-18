@@ -117,6 +117,17 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','email','fullname',)
 
+
+class ClientNotificationSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=True,)
+    
+
+    class Meta:
+        model = ClientNotification
+        fields = ('id', 'title', 'date')
+
+
+
 class TalentUpdateSerializer(serializers.ModelSerializer):
      id = serializers.UUIDField(read_only=True,)
      email = serializers.EmailField(read_only=True)
