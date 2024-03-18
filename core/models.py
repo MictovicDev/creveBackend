@@ -89,6 +89,7 @@ class TalentProfile(models.Model):
     verified = models.BooleanField(default=False)
     skills = models.ManyToManyField(Skills)
     images = models.ManyToManyField(Gallery)
+    cover_image = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     about = models.CharField(max_length=250, blank=True, null=True)
