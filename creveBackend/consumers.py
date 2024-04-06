@@ -9,11 +9,14 @@ class ClientNotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
         await self.channel_layer.group_add("clientnotifications", self.channel_name)
-        from core.models import ClientNotification
-        clientnotification_data = ClientNotification.objects.all()
-        notification_data = [ {
+        from core.models import ClientNotification, ClientProfile, User
+        user_pk = self.scope["user"].pk
+        user = User.objects.get(id=user_pk)
+        clientprofile = ClientProfile.objects.get(user__id=user_pk)  
+        clientnotification_data = ClientNotification.objects.filter(owner=clientprofile)
+        notification_data = [{
                 'title': notification.title,
-                'date': notification.date.strftime('%Y-%m-%d %H:%M:%S') } for notification in clientnotification_data]
+                'date': notification.date.strftime('%Y-%m-%d %H:%M:%S')} for notification in clientnotification_data]
         event = notification_data
         await self.send_notification(event)
 

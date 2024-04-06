@@ -20,13 +20,20 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
       if user.role == 'Client':
          profile_pics = user.clientprofile.profile_pics.url
          token['profile_id'] = user.clientprofile.id
+         profile = user.clientprofile
+         notification = ClientNotification.objects.create(owner=profile, title="A new SignIn Activity was Noticed on your account")
+         notification.save()
       elif user.role == 'Talent':
+         profile = user.clientprofile
+         notification = TalentNotification.objects.create(owner=profile, title="A new SignIn Activity was Noticed on your account")
+         notification.save()
          if user.talentprofile.profile_pics:
              profile_pics = user.talentprofile.profile_pics.url
          else:
              profile_pics = ''
          token['profile_id'] = user.talentprofile.id
       token['profile_pics'] = 'https://creve.onrender.com' + profile_pics
+      
       return token
     
 

@@ -105,7 +105,6 @@ class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
         return super().perform_destroy(instance)
     
 class TalentUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
-    print(dir(generics))
     queryset = User.objects.filter(role='Talent')
     lookup_field = 'pk'
     serializer_class = TalentUpdateSerializer
@@ -117,8 +116,6 @@ class TalentUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
 
     def users_destroy(self, instance):
         return super().perform_destroy(instance)
-    
-# class Question(generics.RetrieveUpdateDestroyAPIView):
 
     
 class ClientProfileGetView(generics.ListAPIView):
@@ -149,7 +146,6 @@ class TalentProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     lookup_field = 'pk'
 
     def talentprofile_update(self,serializer):
-        print("called")
         print(serializer.validated_data)
         instance = serializer.save()
 
@@ -160,13 +156,9 @@ class SkillListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            # pk = self.request.user.id
-            print(serializer.validated_data)
             pk = self.kwargs['pk']
             profile = TalentProfile.objects.get(id=pk)
             skills = serializer.validated_data.get('skill_list').get('skills')
-            # print(serializer.validated_data.get('skill_list').get())
-            print(type(skills))
             for skill in skills:
                 c_skill = Skills.objects.create(skill=skill)
                 profile.skills.add(c_skill)
@@ -194,8 +186,6 @@ class ReviewCreateView(generics.CreateAPIView):
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
             
             
-        
-    
 
 class GalleryListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]

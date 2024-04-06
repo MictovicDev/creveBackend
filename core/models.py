@@ -125,6 +125,7 @@ class ClientProfile(models.Model):
         return f"{self.user.fullname}'s  Profile"
     
 class ClientNotification(models.Model):
+    owner = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, related_name='clientnotification', blank=True, null=True)
     title = models.CharField(max_length=250)
     date = models.DateTimeField(auto_now_add=True)
 
