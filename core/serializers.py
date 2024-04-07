@@ -24,7 +24,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
          notification = ClientNotification.objects.create(owner=profile, title="A new SignIn Activity was Noticed on your account")
          notification.save()
       elif user.role == 'Talent':
-         profile = user.clientprofile
+         profile = user.talentprofile
          notification = TalentNotification.objects.create(owner=profile, title="A new SignIn Activity was Noticed on your account")
          notification.save()
          if user.talentprofile.profile_pics:
