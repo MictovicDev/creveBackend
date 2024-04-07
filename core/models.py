@@ -138,7 +138,7 @@ class ClientNotification(models.Model):
         return self.title
     
 class TalentNotification(models.Model):
-    owner = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, related_name='talentnotification', blank=True, null=True)
+    owner = models.ForeignKey(TalentProfile, on_delete=models.CASCADE, related_name='talentnotification', blank=True, null=True)
     title = models.CharField(max_length=250)
     date = models.DateTimeField(auto_now_add=True)
 
