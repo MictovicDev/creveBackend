@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from rest_framework import generics,permissions, response, status
+from rest_framework import generics,permissions, response, status,filters
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -50,6 +50,8 @@ class TalentView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
     queryset = User.objects.filter(role='Talent')
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['skills','display_name','category','location','phone_number','whatsapp_link','resume_link','website_link','digital_skills']
 
     def perform_create(self, serializer):
         if serializer.is_valid():
