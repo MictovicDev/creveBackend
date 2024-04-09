@@ -51,7 +51,9 @@ class TalentView(generics.ListCreateAPIView):
     permission_classes = [permissions.AllowAny]
     queryset = User.objects.filter(role='Talent')
     filter_backends = [filters.SearchFilter]
-    search_fields = ['skills','display_name','category','location','phone_number','whatsapp_link','resume_link','website_link','digital_skills']
+    search_fields = ['fullname', 'email','role']
+
+    
 
     def perform_create(self, serializer):
         if serializer.is_valid():
@@ -112,6 +114,7 @@ class TalentUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TalentUpdateSerializer
     permission_classes = [permissions.AllowAny]
     
+    
 
     def users_update(self, serializer):
         instance = serializer.save()
@@ -126,10 +129,17 @@ class ClientProfileGetView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+
+# class TalentView(generics.ListAPIView):
+#     queryset = User.objects.filter(role='Talent')
+
+
 class TalentProfileGetView(generics.ListAPIView):
     queryset = TalentProfile.objects.all()
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['category','location','phone_number','whatsapp_link','resume_link','website_link','digital_skills']
 
 
 class ClientProfileGetUpdateView(generics.RetrieveUpdateAPIView):

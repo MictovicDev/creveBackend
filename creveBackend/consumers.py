@@ -9,9 +9,11 @@ class ClientNotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
         await self.channel_layer.group_add("clientnotifications", self.channel_name)
+        print(self.scope["user"])
         from core.models import ClientNotification, ClientProfile, User
-        user_pk = self.scope["user"].pk
-        user = User.objects.get(id=user_pk)
+        user = self.scope["user"]
+        # uls
+        
         clientprofile = ClientProfile.objects.get(user__id=user_pk)  
         clientnotification_data = ClientNotification.objects.filter(owner=clientprofile)
         notification_data = [{
@@ -54,6 +56,7 @@ class TalentNotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
         await self.channel_layer.group_add("talentnotifications", self.channel_name)
+        print(self)
         from core.models import TalentNotification
         talentnotification_data = TalentNotification.objects.all()
         notification_data = [ {
@@ -87,7 +90,20 @@ class TalentNotificationConsumer(AsyncWebsocketConsumer):
         }))
 
    
-    
+
+
+class ChatConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+        user_pk = self.scope["user"].pk
+        user = self.scope["user"]
+        print(self.scope['url_route']['kwargs']['pk'])
+        print(user)
+        from core.models import User
+        from chat.models import Chat, Message
+        sender = User.objects.get(id)
+        # chat = Chat.objects.filter(sender=)
+        # await self.channel_layer.group_add("talentnotifications", self.channel_name)
 
 
 # gunicorn creveBackend.wsgi:application
