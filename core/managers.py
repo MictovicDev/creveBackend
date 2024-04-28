@@ -14,7 +14,7 @@ class UserManager(BaseUserManager):
        return user
         
 
-     
+#    /
 #https://localhost:8000/oauth/complete/google-oauth2/
     def create_superuser(self, email,password=None,**extra_fields):
         user = self.create_user(email,password,**extra_fields)
