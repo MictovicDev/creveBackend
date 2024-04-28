@@ -245,7 +245,7 @@ CHANNEL_LAYERS = {
 # }
     
 
-
+print('l')
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -268,3 +268,5 @@ os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 # www.heidelberg.de
 # www.rwth-aachen.de
 # www.hu-berlin.de/de
+
+# h
