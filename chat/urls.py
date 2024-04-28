@@ -2,6 +2,8 @@ from django.urls import path,include
 from . import views
 
 
-url_patterns = [
-    path('', views.chat, name='chat')
+urlpatterns = [
+    path('', views.chat, name='chat'),
+    path('<str:pk>/', views.send, name='chats')
+   
 ]

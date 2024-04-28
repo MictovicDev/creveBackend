@@ -23,6 +23,7 @@ from asgiref.sync import async_to_sync
 
 
 
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
@@ -89,6 +90,10 @@ class ActivateAccount(APIView):
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
         
 
+
+
+# async def send_message():
+    
 
 
 # class ClientNotifications(generics.ListAPIView):

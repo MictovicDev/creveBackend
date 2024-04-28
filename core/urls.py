@@ -26,5 +26,6 @@ urlpatterns = [
     path('clientnotifications/', views.clientnotifications, name="clientnotification"),
     path('talentnotifications/', views.talentnotifications, name="talentnotification"),
     path('gallery/<str:pk>/', views.GalleryGetUpdateView.as_view(), name="create-gallery"),
+   
       
 ]

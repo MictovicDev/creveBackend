@@ -9,7 +9,7 @@ class Chat(models.Model):
 
 
     def __str__(self):
-        return f"Chat betweeen {self.sender} and {self.receiver}"
+        return f"Chat_betweeen_{self.sender.id}_and_{self.reciever.id}"
     
     
 

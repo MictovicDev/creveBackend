@@ -7,7 +7,7 @@ from chat.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
-    path('chat/', chat, name='chat' )
+    path('chat/', include('chat.urls'))
 ]
 
 if settings.DEBUG:

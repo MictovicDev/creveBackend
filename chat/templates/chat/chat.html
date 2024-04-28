@@ -19,6 +19,29 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
+<script>
+  // const socket = new WebSocket('wss://creve.onrender.com/ws/clientnotifications/');
+  const hello = document.querySelector('.card');
+  console.log(hello)
+  const socket = new WebSocket(`ws://localhost:8000/ws/chats/${"011796a7-dc33-4d01-8e07-096615e16c09"}/`)
+  console.log(socket)
+  socket.onopen = function(event) {
+      console.log(event)
+      socket.send('hello!')
+
+  };
+  socket.onmessage = function(event) {
+      console.log(event['data'])
+      const new_Data = JSON.parse(event['data'])
+      const ta = new_Data['chats']
+      console.log(length(ta))
+      
+      
+      
+  }
+  
+</script>
+
 
 <main class="content">
   <div class="container p-0">
@@ -27,7 +50,7 @@
 
   <div class="card">
     <div class="row g-0">
-      <div class="col-12 col-lg-5 col-xl-3 border-right">
+      <div id="home" class="col-12 col-lg-5 col-xl-3 border-right">
 
         <div class="px-4 d-none d-md-block">
           <div class="d-flex align-items-center">
