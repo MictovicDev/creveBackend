@@ -11,9 +11,9 @@ urlpatterns = [
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'), #you can use to login
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api', views.DocumentApi.as_view(), name="endpoints" ),
-    path('auth/user/', views.ClientView.as_view(), name='client_signup'),
-    path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
-    path('auth/activation/<str:token>', views.ActivateAccount.as_view(), name='activateaccount'),
+    path('auth/', views.CreateUserView.as_view(), name='client_signup'),
+    # path('auth/creative/', views.TalentView.as_view(), name='talent_signup'),
+    path('auth/activation/', views.ActivateAccount.as_view(), name='activateaccount'),
     path('questions/', views.QuestionListCreateView.as_view(), name='question-create'),
     path('questions/<str:pk>/', views.QuestionUpdateDel.as_view(), name='question-list'),
     path('userprofile/', views.ClientProfileGetView.as_view(), name="usersprofile"),
@@ -26,6 +26,5 @@ urlpatterns = [
     path('clientnotifications/', views.clientnotifications, name="clientnotification"),
     path('talentnotifications/', views.talentnotifications, name="talentnotification"),
     path('gallery/<str:pk>/', views.GalleryGetUpdateView.as_view(), name="create-gallery"),
-   
-      
+
 ]

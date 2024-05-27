@@ -8,15 +8,18 @@ from django.contrib.postgres.fields import ArrayField
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = (
         ('Client', 'Client'),
-        ('Talent', 'Talent'),
+        ('Creative', 'Creative'),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     fullname = models.CharField(max_length=250,blank=True, null=True)
     email = models.EmailField(verbose_name='email address',max_length=255,unique=True,)
     is_active = models.BooleanField(default=False)
+    phone_number = models.CharField(max_length=250, blank=True, null=True)
     is_admin = models.BooleanField(default=False)
     role = models.CharField(max_length= 250, blank=True,null=True, choices=ROLE_CHOICES)
     token = models.CharField(max_length=500, blank=True, null=True)
+    otp = models.CharField(max_length=500, blank=True, null=True)
+    otp_secret = models.CharField(max_length=500, blank=True, null=True)
     updates = models.BooleanField(default=False)
     authMedium = models.CharField(max_length=50, default='email')
   
@@ -99,7 +102,6 @@ class TalentProfile(models.Model):
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
-    phone_number = models.CharField(max_length=250, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
     whatsapp_link = models.URLField(blank=True, null=True)
     resume_link = models.URLField(blank=True, null=True)
@@ -113,8 +115,9 @@ class TalentProfile(models.Model):
     
     
  
-    # talent_profile = models.ForeignKey(TalentProfile, blank=True, null=True, on_delete=models.CASCADE, related_name='skills')
-    
+# class Profile(models.Model):
+#     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='files/images/default.png')
+
 
 class ClientProfile(models.Model):
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='files/images/default.png')

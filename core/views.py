@@ -17,8 +17,25 @@ from . import urls
 from core.serializers import *
 from django.db.models.signals import post_save
 from .models import TalentProfile
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+from django.db.models.signals import post_save
+import pyotp
+
+# from channels.layers import get_channel_layer
+# from asgiref.sync import async_to_sync
+
+
+@receiver(post_save, sender=User)
+def post_save_handler(sender, instance, created, **kwargs):
+     fullname = instance.fullname
+     useremail = instance.email
+     otp = instance.otp
+     if created:
+       if instance.role == 'Client':
+           email.send_linkmail(fullname,useremail,otp)
+           ClientProfile.objects.create(user=instance)
+       else:
+          email.send_linkmail(fullname,useremail,otp)
+          TalentProfile.objects.create(user=instance)
 
 
 
@@ -27,25 +44,35 @@ from asgiref.sync import async_to_sync
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
-        
-class ClientView(generics.ListCreateAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny]
-    queryset = User.objects.filter(role='Client')
 
-    def perform_create(self, serializer):
+
+
+#changes
+class CreateUserView(generics.ListCreateAPIView):
+     serializer_class = UserSerializer
+     permission_classes = [permissions.AllowAny]
+     queryset = User.objects.all()
+
+     def perform_create(self, serializer):
         if serializer.is_valid():
-            user = serializer.save(role='Client')
-            proflie = ClientProfile.objects.create(user=user)
+            base32secret3232 = pyotp.random_base32()
+            otp = pyotp.TOTP(base32secret3232, interval=230, digits=5)
+            time_otp = otp.now()
+            role = serializer.validated_data.get('role')
+            otp_secret = base32secret3232
+            user = serializer.save(
+                otp=time_otp, role=role, otp_secret=otp_secret)
             token = str(RefreshToken.for_user(user))
             user.token = token
-            fullname = user.fullname
-            useremail = user.email
-            user.is_active = True
             user.save()
-            email.send_linkmail(fullname,useremail,token)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
     
 class TalentView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
@@ -55,7 +82,6 @@ class TalentView(generics.ListCreateAPIView):
     search_fields = ['fullname', 'email','role']
 
     
-
     def perform_create(self, serializer):
         if serializer.is_valid():
             user = serializer.save(role='Talent')
@@ -70,34 +96,42 @@ class TalentView(generics.ListCreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class ActivateAccount(APIView):
+class ActivateAccount(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
-    def get(self, request,token):
+    serializer_class = ActivationSerializer
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        otp = request.data.get('otp')
         try:
-            user = User.objects.get(token=token)
-            print(user)
+            user = User.objects.get(email=email, otp=otp)
+        except:
+            data = {'message': "User Does not exists"}
+            return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        if  pyotp.TOTP(user.otp_secret, interval=230, digits=5).verify(otp):
             user.is_active = True
             user.save()
             data = {
                 'user': user.email,
                 'token': user.token
             }
-            if user.role == 'Client':
-                return redirect('https://creve.vercel.app/login')
-            return redirect('https://creve.vercel.app/loginCreative')
-        except:
-            data = {'message': "User does not exist"}
+            return Response(data=data, status=status.HTTP_200_OK)
+            # return redirect('http://localhost:8000/api/token')
+            
+        else:
+            data = {'message': "Token has Expired"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+            # print('False')
+            # except:
+            #     data = {'message': "Token has Expired"}
+            #     return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+           
         
 
 
-
-# async def send_message():
+       
     
+        
 
-
-# class ClientNotifications(generics.ListAPIView):
-#     pass
 
 
 class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -134,9 +168,6 @@ class ClientProfileGetView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-
-# class TalentView(generics.ListAPIView):
-#     queryset = User.objects.filter(role='Talent')
 
 
 class TalentProfileGetView(generics.ListAPIView):
@@ -302,44 +333,44 @@ class DocumentApi(APIView):
         return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
    
-@receiver(post_save, sender=TalentProfile)
-def clientnotification(sender, instance, created, **kwargs):
-    if created:
-        ClientNotification.objects.create(title= f"A New Talent {instance.user.fullname} just joined Creve")
-        notifications_data = []
-        clientsnotification_data = ClientNotification.objects.all()
-        for notification in clientsnotification_data:
-            notification_dict = {
-                'title': notification.title,
-                'date': notification.date.strftime('%Y-%m-%d %H:%M:%S')  # Convert date to string in desired format
-            }
-            notifications_data.append(notification_dict)
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "clientnotifications",
-            {
-                'type': 'send_client_notification',
-                'notification': notifications_data
-            }
-        )
+# @receiver(post_save, sender=TalentProfile)
+# def clientnotification(sender, instance, created, **kwargs):
+#     if created:
+#         ClientNotification.objects.create(title= f"A New Talent {instance.user.fullname} just joined Creve")
+#         notifications_data = []
+#         clientsnotification_data = ClientNotification.objects.all()
+#         for notification in clientsnotification_data:
+#             notification_dict = {
+#                 'title': notification.title,
+#                 'date': notification.date.strftime('%Y-%m-%d %H:%M:%S')  # Convert date to string in desired format
+#             }
+#             notifications_data.append(notification_dict)
+#         channel_layer = get_channel_layer()
+#         async_to_sync(channel_layer.group_send)(
+#             "clientnotifications",
+#             {
+#                 'type': 'send_client_notification',
+#                 'notification': notifications_data
+#             }
+#         )
 
-@receiver(post_save, sender=ClientProfile)
-def talentnotification(sender, instance, created, **kwargs):
-    if created:
-        talentnotification = TalentNotification.objects.create(title= f"A New Client {instance.user.fullname} just joined Creve, make your Profile more appealing")
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "talentnotifications",
-            {
-                'type': 'send_talent_notification',
-                'notification': {"talent_notification_title":talentnotification.title,
-                                  "talent_notification_date": talentnotification.date.strftime('%Y-%m-%d %H:%M:%S') }
-            }
-        )
+# @receiver(post_save, sender=ClientProfile)
+# def talentnotification(sender, instance, created, **kwargs):
+#     if created:
+#         talentnotification = TalentNotification.objects.create(title= f"A New Client {instance.user.fullname} just joined Creve, make your Profile more appealing")
+#         channel_layer = get_channel_layer()
+#         async_to_sync(channel_layer.group_send)(
+#             "talentnotifications",
+#             {
+#                 'type': 'send_talent_notification',
+#                 'notification': {"talent_notification_title":talentnotification.title,
+#                                   "talent_notification_date": talentnotification.date.strftime('%Y-%m-%d %H:%M:%S') }
+#             }
+#         )
     
-def notfi(request):
-    clientnotification = ClientNotification.objects.all()
-    return clientnotification
+# def notfi(request):
+#     clientnotification = ClientNotification.objects.all()
+#     return clientnotification
 
 
 

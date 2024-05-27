@@ -17,22 +17,18 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
       token['email'] = user.email
       token['role'] = user.role
       token['name'] = user.fullname
+      token['phone_number'] = user.phone_number
       if user.role == 'Client':
          profile_pics = user.clientprofile.profile_pics.url
          token['profile_id'] = user.clientprofile.id
          profile = user.clientprofile
-         notification = ClientNotification.objects.create(owner=profile, title="A new SignIn Activity was Noticed on your account")
-         notification.save()
-      elif user.role == 'Talent':
+      elif user.role == 'Creative':
          profile = user.talentprofile
-         notification = TalentNotification.objects.create(owner=profile, title="A new SignIn Activity was Noticed on your account")
-         notification.save()
          if user.talentprofile.profile_pics:
              profile_pics = user.talentprofile.profile_pics.url
          else:
              profile_pics = ''
          token['profile_id'] = user.talentprofile.id
-      token['profile_pics'] = 'https://creve.onrender.com' + profile_pics
       
       return token
     
@@ -67,6 +63,12 @@ class GallerySerializer(serializers.ModelSerializer):
         fields = ('images',)
 
 
+class ActivationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ('email','otp',)
+
 
 class TalentProfileSerializer(serializers.ModelSerializer):
      skills = SkillSerializer(read_only=True,many=True)
@@ -85,7 +87,7 @@ class TalentProfileSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
      password = serializers.CharField(write_only=True, required=True)
      id = serializers.UUIDField(read_only=True,)
-     role = serializers.CharField(read_only=True,)
+     role = serializers.CharField()
      fullname = serializers.CharField()
      talentprofile = TalentProfileSerializer(read_only=True)
      

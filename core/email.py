@@ -7,16 +7,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 # @shared_task
-def send_linkmail(fullname,useremail,token):
+def send_linkmail(fullname,useremail,otp):
     try:
-        token = str(token)
-        tokencheck = token
-        url = f"http://creve.onrender.com/auth/activation/{tokencheck}"
         subject = 'Welcome to Creve'
         name = fullname.capitalize()
         email_data = {
-            'url': url,
-            'token': tokencheck,
+            'otp': otp,
             'name': name
         }
         html_message = render_to_string('core/email.html',email_data)

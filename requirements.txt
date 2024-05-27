@@ -32,7 +32,7 @@ packaging==23.1
 pathspec==0.11.2
 Pillow==9.5.0
 platformdirs==3.10.0
-psycopg2-binary
+psycopg2==2.9.9
 pycparser==2.21
 PyJWT==2.8.0
 python-dateutil==2.8.2
@@ -53,8 +53,3 @@ uritemplate==4.1.1
 urllib3==2.0.4
 watchdog==3.0.0
 whitenoise==6.5.0
-cloudinary
-django_cloudinary_storage
-daphne
-channels
-channels-redis

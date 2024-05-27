@@ -55,13 +55,15 @@ from . import routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'creveBackend.settings')
 
-application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
-    "websocket": AuthMiddlewareStack(
-        URLRouter(
-            routing.websocket_urlpatterns
-        )
-    ),
+application = get_asgi_application()
+
+# application = ProtocolTypeRouter({
+#     "http": get_asgi_application(),
+#     "websocket": AuthMiddlewareStack(
+#         URLRouter(
+#             routing.websocket_urlpatterns
+#         )
+#     ),
     
-})
+# })
 

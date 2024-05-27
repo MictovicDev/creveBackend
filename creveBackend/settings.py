@@ -3,7 +3,7 @@ import dj_database_url
 import os
 from datetime import timedelta
 from django.conf import settings
-import cloudinary_storage
+# import cloudinary_storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,8 +28,6 @@ AUTH_USER_MODEL = "core.User"
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,6 +74,8 @@ TEMPLATES = [
     },
 ]
 
+
+
 WSGI_APPLICATION = 'creveBackend.wsgi.application'
 
 
@@ -84,16 +84,16 @@ WSGI_APPLICATION = 'creveBackend.wsgi.application'
 
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
-DATABASES = {}
+# DATABASES = {}
 
-DATABASES["default"]=dj_database_url.parse('postgres://creve_db_ms14_user:MJCYbJf0gifV4ekM1NRxhdDHztmd2huF@dpg-cnl3ubud3nmc73evvpdg-a.oregon-postgres.render.com/creve_db_ms14')
+# DATABASES["default"]=dj_database_url.parse('postgres://creve_db_ms14_user:MJCYbJf0gifV4ekM1NRxhdDHztmd2huF@dpg-cnl3ubud3nmc73evvpdg-a.oregon-postgres.render.com/creve_db_ms14')
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -229,14 +229,14 @@ MEDIA_URL = '/media/'
 
 
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
-        },
-    },
-}
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": ['redis://red-cnp46h7109ks73es96r0:6379'],
+#         },
+#     },
+# }
 
 # CHANNEL_LAYERS = {
 #     'default': {
@@ -261,7 +261,7 @@ SERVER_EMAIL =  'creveafrica@gmail.com'
 
 ASGI_APPLICATION = "creveBackend.asgi.application"
 
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+# os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 # www.tum.de
 # www.uni-bonn.de/en
