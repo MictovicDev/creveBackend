@@ -149,13 +149,13 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dr6bsrdid',
-    'API_KEY': '898623249482269',
-    'API_SECRET': '-tneUT5fN57OeUIu-nwE0VdEXS8'
-}
+# CLOUDINARY_STORAGE = {
+#     'CLOUD_NAME': 'dr6bsrdid',
+#     'API_KEY': '898623249482269',
+#     'API_SECRET': '-tneUT5fN57OeUIu-nwE0VdEXS8'
+# }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 REST_FRAMEWORK = {
      'DEFAULT_PERMISSION_CLASSES': (
@@ -221,8 +221,9 @@ CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:3000",
     "https://creve.vercel.app",
     "http://localhost:3000",
-    # Add other trusted domains as needed
 ]
+
+# CORS_ORIGIN_WHITELIST = ['*']
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
@@ -244,9 +245,6 @@ MEDIA_URL = '/media/'
 #     },
 # }
     
-
-print('l')
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

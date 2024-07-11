@@ -1,11 +1,13 @@
 from core.models import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
+from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers,response,status
 from django.contrib.auth.password_validation import validate_password
 from core.models import *
+from django.shortcuts import get_object_or_404
 
 import re
 
@@ -17,7 +19,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
       token['email'] = user.email
       token['role'] = user.role
       token['name'] = user.fullname
-      token['phone_number'] = user.phone_number
       if user.role == 'Client':
          profile_pics = user.clientprofile.profile_pics.url
          token['profile_id'] = user.clientprofile.id
@@ -34,21 +35,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     
 
 
-class ClientProfileSerializer(serializers.ModelSerializer):
-     user = serializers.PrimaryKeyRelatedField(read_only=True)
-     class Meta:
-         model = ClientProfile
-         fields = ('id','user','profile_pics',)
-
 class SkillSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False,read_only=True)
-    skill_list = serializers.JSONField(write_only=True)
+    # id = serializers.IntegerField(required=False,read_only=True)
+    skill = serializers.CharField(required=True)
    
-    
-
     class Meta:
-        model = Skills
-        fields = ('id','skill','skill_list')
+        model = Skill
+        fields = ('skill',)
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -60,7 +53,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 class GallerySerializer(serializers.ModelSerializer):
     class Meta:
         model = Gallery
-        fields = ('images',)
+        fields = ('image',)
 
 
 class ActivationSerializer(serializers.ModelSerializer):
@@ -70,32 +63,19 @@ class ActivationSerializer(serializers.ModelSerializer):
         fields = ('email','otp',)
 
 
-class TalentProfileSerializer(serializers.ModelSerializer):
-     skills = SkillSerializer(read_only=True,many=True)
-     gallery = GallerySerializer(read_only=True)
-     questions = QuestionSerializer(read_only=True,many=True)
-     phone_number = serializers.CharField(required=False)
-     user = serializers.PrimaryKeyRelatedField(read_only=True)
-
-
-     class Meta:
-         model = TalentProfile
-         fields = '__all__'
-
-
 
 class UserSerializer(serializers.ModelSerializer):
      password = serializers.CharField(write_only=True, required=True)
      id = serializers.UUIDField(read_only=True,)
      role = serializers.CharField()
      fullname = serializers.CharField()
-     talentprofile = TalentProfileSerializer(read_only=True)
+    #  talentprofile = TalentProfileSerializer(read_only=True)
      
      
 
      class Meta:
         model = User
-        fields = ('id','email','password','fullname','role','talentprofile')
+        fields = ('id','email','password','fullname','role')
 
 
      def create(self, validated_data):
@@ -118,6 +98,51 @@ class UserSerializer(serializers.ModelSerializer):
            raise serializers.ValidationError("Password should have a special character.")
         return attrs
      
+
+class ClientProfileSerializer(serializers.ModelSerializer):
+     user = UserSerializer(read_only=True)
+     class Meta:
+         model = ClientProfile
+         fields = ('id','user','profile_pics',)
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    reviewer = ClientProfileSerializer(read_only=True)
+    
+    class Meta:
+        model = Review
+        fields = ['id','content','image','relevant_link','reviewer']
+
+
+class TalentSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = TalentProfile
+        fields = ('id','profile_pics','user')
+
+
+class BookedCreativeSerializer(serializers.ModelSerializer):
+    talent_profile = TalentSerializer(read_only=True)
+    client_profile = ClientProfileSerializer(read_only=True)
+    class Meta:
+        model = BookedCreative
+        fields = ('id','title', 'description', 'client_profile','phone','talent_profile')
+
+class TalentProfileSerializer(serializers.ModelSerializer):
+     skills_list = serializers.ListField(required=False, write_only=True)
+     images_list = serializers.ListField(required=False, write_only=True)
+     dskills = SkillSerializer(read_only=True, many=True)
+     images = GallerySerializer(read_only=True,many=True)
+     user = UserSerializer(read_only=True)
+     books = BookedCreativeSerializer(read_only=True, many=True)
+     reviewed = ReviewSerializer(read_only=True, many=True)
+
+
+     class Meta:
+        model = TalentProfile
+        fields = '__all__'
+
 
 
          
@@ -152,13 +177,7 @@ class TalentUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id','email','fullname',)
     
-class ReviewSerializer(serializers.ModelSerializer):
-    reviewer = ClientProfileSerializer(read_only=True)
-    reviewed = TalentProfileSerializer(read_only=True)
-    
-    class Meta:
-        model = Review
-        fields = ['id','reviewer','reviewed','content','image','relevant_link']
+
 
     
      
