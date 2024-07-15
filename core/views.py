@@ -21,6 +21,7 @@ from .models import TalentProfile
 from django.db.models.signals import post_save
 import pyotp
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
 from django.db.models import Q
 # from channels.layers import get_channel_layer
 # from asgiref.sync import async_to_sync
@@ -41,12 +42,8 @@ def post_save_handler(sender, instance, created, **kwargs):
 
 
 
-
-
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
-
 
 
 
@@ -72,7 +69,6 @@ class CreateUserView(generics.ListCreateAPIView):
 
 
 
-
     
 class TalentView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
@@ -95,6 +91,8 @@ class TalentView(generics.ListCreateAPIView):
             email.send_linkmail(fullname,useremail,token)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
     
 class ActivateAccount(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
@@ -193,21 +191,6 @@ class TalentProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     def perform_update(self,serializer):
         try:
             pk = self.kwargs.get('pk')
-            talentprofile = get_object_or_404(TalentProfile, pk=pk)
-            skills_data = serializer.validated_data.get('skills_list', [])
-            gallery_data = serializer.validated_data.get('images_list', [])
-            if skills_data:
-                talentprofile.dskills.all().delete()
-                Skill.objects.bulk_create([
-                    Skill(talentprofile=talentprofile, skill=skill_data)
-                    for skill_data in skills_data
-                ])
-            if gallery_data:
-                talentprofile.images.all().delete()
-                Gallery.objects.bulk_create([
-                    Gallery(image=image, talentprofile=talentprofile)
-                    for image in gallery_data
-                ])
             serializer.save()
             print(dir(serializer))
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -258,8 +241,7 @@ class ReviewCreateView(generics.ListCreateAPIView):
         if serializer.is_valid():
             print('Yes')
             content = serializer.validated_data['content']
-            relevant_link = serializer.validated_data['relevant_link']
-            image = serializer.validated_data['image']
+            rating = serializer.validated_data['rating']
             try:
                 client_profile = ClientProfile.objects.get(user=self.request.user)
                 print(client_profile)
@@ -277,8 +259,7 @@ class ReviewCreateView(generics.ListCreateAPIView):
                 try:
                     review = Review.objects.create(
                         content=content,
-                        image=image,
-                        relevant_link=relevant_link,
+                        rating = rating,
                         reviewer=client_profile,
                         reviewed=talent_profile
                     )
@@ -289,6 +270,9 @@ class ReviewCreateView(generics.ListCreateAPIView):
                     return Response({"message": "Failed to create review"}, status=status.HTTP_400_BAD_REQUEST)
         else:
            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
             
 class BookView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -301,7 +285,9 @@ class BookView(generics.ListAPIView):
                 talent_profile = TalentProfile.objects.get(user=self.request.user)
                 bookies = BookedCreative.objects.filter(talent_profile=talent_profile)
             except TalentProfile.DoesNotExist:
+                print("YEs")
                 client_profile = ClientProfile.objects.get(user=self.request.user)
+                print(client_profile)
                 bookies = BookedCreative.objects.filter(client_profile=client_profile)
             return bookies
         except BookedCreative.DoesNotExist:
@@ -341,44 +327,125 @@ class BookCreativeView(generics.ListCreateAPIView):
                 return  Response(data=data, status=status.HTTP_404_NOT_FOUND)
             try:
                 talent_profile = TalentProfile.objects.get(id=pk)
+                talent_email = talent_profile.user.email
+                print(talent_profile.user.email)
             except TalentProfile.DoesNotExist:
                 data = {"message": "Client not found"}
                 return  Response(data=data, status=status.HTTP_404_NOT_FOUND)
             if talent_profile and client_profile:
                 BookedCreative.objects.create(talent_profile=talent_profile, client_profile=client_profile, title=title, description=description, phone=phone_number)
+                print(client_profile.user.fullname)
+                email.send_booking_mail(fullname=talent_profile.user.fullname, clientname=client_profile.user.fullname, useremail=talent_email)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response({"message": "Users not found"}, status= status.HTTP_404_NOT_FOUND)
         else:
            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
 
 
+class SkillsListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = SkillSerializer
 
-# class GalleryListCreateView(generics.ListCreateAPIView):
-#     permission_classes = [permissions.IsAuthenticated]
-#     queryset = Gallery.objects.all()
-#     serializer_class = GallerySerializer
+    def get_queryset(self):
+        user = self.request.user
+        try:
+            profile = TalentProfile.objects.get(user=user)
+            return Skill.objects.filter(talentprofile=profile)
+        except TalentProfile.DoesNotExist:
+            return Skill.objects.none()
 
-#     def perform_create(self, serializer):
-#         if serializer.is_valid():
-#             # pk = self.request.user.id
-#             print(serializer.validated_data)
-#             pk = self.kwargs['pk']
-#             profile = TalentProfile.objects.get(id=pk)
-#             images = serializer.validated_data.get('image_list').get('images')
-#             print(images)
-#             for image in images:
-#                 gallery = Gallery.objects.create(image=image)
-#                 profile.images.add(gallery)
-#                 gallery.save()
-#                 profile.save()
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
-                
         
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            if self.request.user.is_authenticated:
+                    try:
+                        user = self.request.user
+                        print(user)
+                        talentprofile = TalentProfile.objects.get(user=user)
+                        print(talentprofile)
+                        skills_data = serializer.validated_data.get('skills_list', [])
+                        print(skills_data)
+                        if skills_data:
+                            Skill.objects.bulk_create([
+                                Skill(talentprofile=talentprofile, skill=skill_data)
+                                for skill_data in skills_data
+                            ])
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    except TalentProfile.DoesNotExist:
+                        return Response({"message":"TalentProfile Does not exist"})
+            return Response({"message": "you must be logged in to create question"})
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+    
 
-class GalleryGetUpdateView(generics.RetrieveUpdateAPIView):
+
+class GalleryListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = GallerySerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        try:
+            profile = TalentProfile.objects.get(user=user)
+            return Gallery.objects.filter(talentprofile=profile)
+        except TalentProfile.DoesNotExist:
+            return Gallery.objects.none()
+
+        
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            if self.request.user.is_authenticated:
+                    try:
+                        user = self.request.user
+                        print(user)
+                        talentprofile = TalentProfile.objects.get(user=user)
+                        talentprofile.delete()
+                        print(talentprofile)
+                        gallery_data = serializer.validated_data.get('images_list', [])
+                        print(gallery_data)
+                        if gallery_data:
+                            Gallery.objects.bulk_create([
+                                Gallery(talentprofile=talentprofile, image=image)
+                                for image in gallery_data
+                            ])
+                        return Response(serializer.data, status=status.HTTP_201_CREATED)
+                    except TalentProfile.DoesNotExist:
+                        return Response({"message":"TalentProfile Does not exist"})
+            return Response({"message": "you must be logged in to create question"})
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class SkillUpdateDel(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+    lookup_field = 'pk'
+
+
+    
+    def skill_update(self, serializer):
+        instance = serializer.save()
+        return instance
+
+    def skill_destroy(self, instance):
+        return super().perform_destroy(instance)
+                
+        
+
+class GalleryUpdateDel(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializer
+    lookup_field = 'pk'
+
+
+    
+    def gallery_update(self, serializer):
+        instance = serializer.save()
+        return instance
+
+    def gallery_destroy(self, instance):
+        return super().perform_destroy(instance)
 
 
 
@@ -438,15 +505,6 @@ class QuestionListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
             
 
-    
-
-
-
-def clientnotifications(request):
-    return render(request, "core/ws.html")
-
-def talentnotifications(request):
-    return render(request, "core/tl.html")
 
 
 class DocumentApi(APIView):
@@ -458,45 +516,7 @@ class DocumentApi(APIView):
             data[name.capitalize()] = str(item.pattern)
         return Response(data=data, status=status.HTTP_404_NOT_FOUND)
 
-   
-# @receiver(post_save, sender=TalentProfile)
-# def clientnotification(sender, instance, created, **kwargs):
-#     if created:
-#         ClientNotification.objects.create(title= f"A New Talent {instance.user.fullname} just joined Creve")
-#         notifications_data = []
-#         clientsnotification_data = ClientNotification.objects.all()
-#         for notification in clientsnotification_data:
-#             notification_dict = {
-#                 'title': notification.title,
-#                 'date': notification.date.strftime('%Y-%m-%d %H:%M:%S')  # Convert date to string in desired format
-#             }
-#             notifications_data.append(notification_dict)
-#         channel_layer = get_channel_layer()
-#         async_to_sync(channel_layer.group_send)(
-#             "clientnotifications",
-#             {
-#                 'type': 'send_client_notification',
-#                 'notification': notifications_data
-#             }
-#         )
 
-# @receiver(post_save, sender=ClientProfile)
-# def talentnotification(sender, instance, created, **kwargs):
-#     if created:
-#         talentnotification = TalentNotification.objects.create(title= f"A New Client {instance.user.fullname} just joined Creve, make your Profile more appealing")
-#         channel_layer = get_channel_layer()
-#         async_to_sync(channel_layer.group_send)(
-#             "talentnotifications",
-#             {
-#                 'type': 'send_talent_notification',
-#                 'notification': {"talent_notification_title":talentnotification.title,
-#                                   "talent_notification_date": talentnotification.date.strftime('%Y-%m-%d %H:%M:%S') }
-#             }
-#         )
-    
-# def notfi(request):
-#     clientnotification = ClientNotification.objects.all()
-#     return clientnotification
 
 
 

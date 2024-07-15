@@ -36,12 +36,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class SkillSerializer(serializers.ModelSerializer):
-    # id = serializers.IntegerField(required=False,read_only=True)
-    skill = serializers.CharField(required=True)
+    skills_list = serializers.ListField(required=False, write_only=True)
+    skill = serializers.CharField(required=False)
    
     class Meta:
         model = Skill
-        fields = ('skill',)
+        fields = ('skill','skills_list')
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -50,10 +50,13 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ['id', 'question','answer']
 
+
 class GallerySerializer(serializers.ModelSerializer):
+    images_list = serializers.ListField(required=False, write_only=True)
+    image = serializers.ImageField(required=False)
     class Meta:
         model = Gallery
-        fields = ('image',)
+        fields = ('image','images_list')
 
 
 class ActivationSerializer(serializers.ModelSerializer):
@@ -111,7 +114,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Review
-        fields = ['id','content','image','relevant_link','reviewer']
+        fields = ['id','content','reviewer','rating']
 
 
 class TalentSerializer(serializers.ModelSerializer):
@@ -130,8 +133,6 @@ class BookedCreativeSerializer(serializers.ModelSerializer):
         fields = ('id','title', 'description', 'client_profile','phone','talent_profile')
 
 class TalentProfileSerializer(serializers.ModelSerializer):
-     skills_list = serializers.ListField(required=False, write_only=True)
-     images_list = serializers.ListField(required=False, write_only=True)
      dskills = SkillSerializer(read_only=True, many=True)
      images = GallerySerializer(read_only=True,many=True)
      user = UserSerializer(read_only=True)

@@ -60,7 +60,7 @@ class TalentProfile(models.Model):
     NonDigitalSkills = (
         ('Plumbing','Plumbing'),
         ('Catering','Catering'),
-        ('Hair_Stylist','Hair_stylist'),
+        ('Hair_Stylist','Hair_Stylist'),
         ('Electronics/Repairs', 'Electronics/Repairs'),
         ('Furniture-Making','Furniture-Making'),
         ('Cobbling','Cobbling'),
@@ -73,7 +73,7 @@ class TalentProfile(models.Model):
         ('UI/UX_Design','UI/UX_Design'),
         ('Graphics_Design','Graphics_Design'),
         ('Content_Creation','Content_Creation'),
-        ('Frontend_development', 'Frontend_Development')
+        ('Frontend_Development', 'Frontend_Development')
     )
     CATEGORY_TYPE = (
         ('DigitalSkills', 'DigitalSkills'),
@@ -85,18 +85,18 @@ class TalentProfile(models.Model):
     cover_image = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
-    phone_number = models.CharField(max_length=250, blank=True, null=True)
-    about = models.CharField(max_length=250, blank=True, null=True)
+    phone_number = models.CharField(max_length=250, blank=True, default="")
+    about = models.CharField(max_length=400, blank=True, null=True)
     nondigital_skills = models.CharField(max_length=250, choices=NonDigitalSkills, blank=True)
     display_name = models.CharField(max_length=100,blank=True, null=True)
     category = models.CharField(max_length=250, blank=True, choices=CATEGORY_TYPE)
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    whatsapp_link = models.URLField(blank=True, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
+    whatsapp_link = models.CharField(max_length=250,blank=True, default="")
+    website_link = models.CharField(max_length=250, blank=True, default="")
     resume_link = models.URLField(blank=True, null=True)
-    website_link = models.URLField(blank=True, null=True)
     
 
     def __str__(self):
@@ -179,10 +179,9 @@ class TalentNotification(models.Model):
 
 class Review(models.Model):
     content = models.TextField()
-    image = models.ImageField(upload_to='files/images',blank=True, null=True)
+    rating = models.CharField(max_length=250, blank=True, null=True)
     reviewer = models.ForeignKey(ClientProfile, on_delete=models.CASCADE,related_name='reviews')
     reviewed = models.ForeignKey(TalentProfile, on_delete=models.CASCADE,null=True,related_name='reviewed')
-    relevant_link = models.URLField(blank=True, null=True)
 
 
 
