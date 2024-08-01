@@ -15,6 +15,7 @@ from . import email
 from django.dispatch import receiver
 import requests
 from . import urls
+from chat.urls import urlpatterns
 from core.serializers import *
 from django.db.models.signals import post_save
 from .models import TalentProfile
@@ -23,6 +24,7 @@ import pyotp
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from django.db.models import Q
+from core.serializers import WaitListSerializer
 # from channels.layers import get_channel_layer
 # from asgiref.sync import async_to_sync
 
@@ -32,6 +34,12 @@ def post_save_handler(sender, instance, created, **kwargs):
      fullname = instance.fullname
      useremail = instance.email
      otp = instance.otp
+     print(otp)
+    #  otp0 = instance.otp[0]
+    #  otp1 = instance.otp[1]
+    #  otp2 = instance.otp[2]
+    #  otp3 = instance.otp[3]
+    #  otp4 = instance.otp[4]
      if created:
        if instance.role == 'Client':
            email.send_linkmail(fullname,useremail,otp)
@@ -45,6 +53,16 @@ def post_save_handler(sender, instance, created, **kwargs):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+
+class UpdateOtpSecretView(generics.UpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def users_update(self, serializer):
+        serializer.save()
+    
+    
+    
 
 
 class CreateUserView(generics.ListCreateAPIView):
@@ -123,7 +141,13 @@ class ActivateAccount(generics.GenericAPIView):
             #     data = {'message': "Token has Expired"}
             #     return Response(data=data, status=status.HTTP_404_NOT_FOUND)
            
-        
+
+
+class WaitListView(generics.ListCreateAPIView):
+    queryset = Waitlist.objects.all()
+    serializer_class = WaitListSerializer
+    permission_classes = [permissions.AllowAny]
+
 
 
 class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
@@ -134,7 +158,7 @@ class ClientUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
     
 
     def users_update(self, serializer):
-        instance = serializer.save()
+        serializer.save()
 
     def users_destroy(self, instance):
         return super().perform_destroy(instance)
@@ -143,7 +167,7 @@ class TalentUpdateGetDeleteView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.filter(role='Talent')
     lookup_field = 'pk'
     serializer_class = TalentUpdateSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     
     
 
@@ -166,6 +190,14 @@ class TalentProfileGetView(generics.ListAPIView):
     queryset = TalentProfile.objects.all()
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
+    
+    
+class UnAuthTalentProfileGetView(generics.ListAPIView):
+    queryset = TalentProfile.objects.all()
+    serializer_class = TalentProfileSerializer
+    permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter]
     search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
 
@@ -361,9 +393,7 @@ class SkillsListCreateView(generics.ListCreateAPIView):
             if self.request.user.is_authenticated:
                     try:
                         user = self.request.user
-                        print(user)
                         talentprofile = TalentProfile.objects.get(user=user)
-                        print(talentprofile)
                         skills_data = serializer.validated_data.get('skills_list', [])
                         print(skills_data)
                         if skills_data:
@@ -397,12 +427,8 @@ class GalleryListCreateView(generics.ListCreateAPIView):
             if self.request.user.is_authenticated:
                     try:
                         user = self.request.user
-                        print(user)
                         talentprofile = TalentProfile.objects.get(user=user)
-                        talentprofile.delete()
-                        print(talentprofile)
                         gallery_data = serializer.validated_data.get('images_list', [])
-                        print(gallery_data)
                         if gallery_data:
                             Gallery.objects.bulk_create([
                                 Gallery(talentprofile=talentprofile, image=image)
@@ -514,7 +540,10 @@ class DocumentApi(APIView):
         for item in urls.urlpatterns:
             name = ' '.join(item.name.split('_'))
             data[name.capitalize()] = str(item.pattern)
-        return Response(data=data, status=status.HTTP_404_NOT_FOUND)
+        for item in urlpatterns:
+            name = ' '.join(item.name.split('_'))
+            data[name.capitalize()] = str(item.pattern)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 
 

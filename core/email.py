@@ -16,6 +16,7 @@ def send_linkmail(fullname,useremail,otp):
             'otp': otp,
             'name': name
         }
+        print(email_data)
         html_message = render_to_string('core/email.html',email_data)
         from_email = os.environ.get('EMAIL_USER')
         recipient_list = [useremail]

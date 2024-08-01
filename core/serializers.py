@@ -41,7 +41,7 @@ class SkillSerializer(serializers.ModelSerializer):
    
     class Meta:
         model = Skill
-        fields = ('skill','skills_list')
+        fields = ('id','skill','skills_list')
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -56,7 +56,7 @@ class GallerySerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False)
     class Meta:
         model = Gallery
-        fields = ('image','images_list')
+        fields = ('id','image','images_list')
 
 
 class ActivationSerializer(serializers.ModelSerializer):
@@ -177,6 +177,13 @@ class TalentUpdateSerializer(serializers.ModelSerializer):
      class Meta:
         model = User
         fields = ('id','email','fullname',)
+
+
+class WaitListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Waitlist
+        fields = '__all__'
     
 
 

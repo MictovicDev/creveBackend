@@ -20,6 +20,7 @@ urlpatterns = [
     path('user/<str:pk>/', views.ClientUpdateGetDeleteView.as_view(), name="clientupdate"),
     path('userprofile/<str:pk>/', views.ClientProfileGetUpdateView.as_view(), name="userprofileupdate"),
     path('creativeprofile/', views.TalentProfileGetView.as_view(), name="creativeprofile"),
+    # path('tcreativeprofile/', views.UnAuthTalentProfileGetView.as_view(), name="tcreativeprofile"),
     path('creativeprofile/<str:pk>/', views.TalentProfileGetUpdateView.as_view(), name="creativeprofile"),
     path('skills/', views.SkillsListCreateView.as_view(), name="create-skill"),
     path('skills/<str:pk>/', views.SkillUpdateDel.as_view(), name='skillupdate'),
@@ -27,8 +28,7 @@ urlpatterns = [
     path('bookcreatives/<str:pk>/', views.BookCreativeView.as_view(), name="book_creative"),
     path('books/', views.BookView.as_view(), name="books"),
     path('reviews/', views.ListReview.as_view(), name='reviews'),
-    # path('clientnotifications/', views.clientnotifications, name="clientnotification"),
-    # path('talentnotifications/', views.talentnotifications, name="talentnotification"),
+    path('waitlist/', views.WaitListView.as_view(), name='waitlist'),
     path('gallery/', views.GalleryListCreateView.as_view(), name="create-gallery"),
     path('gallery/<str:pk>/', views.GalleryUpdateDel.as_view(), name= "delete-gallery"),
 

@@ -65,10 +65,16 @@ class TalentProfile(models.Model):
         ('Furniture-Making','Furniture-Making'),
         ('Cobbling','Cobbling'),
         ('Mechanic', 'Mechanic'),
+        ('Cleaning', 'Cleaning'),
+        ('Barbing', 'Barbing'),
         ('Fashion-Designer','Fashion-Designer'),
     )
     DigitalSkills = (
         ('BackendDevelopment', 'BackendDevelopment'),
+        ('Photography', 'Photography'),
+        ('Blockchain Developement','Blockchain Developement'),
+        ('Video_editing', 'Video_editing'),
+        ('WebsiteDevelopment', 'WebsiteDevelopment'),
         ('MobileDevelopment','MobileDevelopment'),
         ('UI/UX_Design','UI/UX_Design'),
         ('Graphics_Design','Graphics_Design'),
@@ -82,7 +88,7 @@ class TalentProfile(models.Model):
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True)
     work_type = models.CharField(max_length=500, blank=True, choices=worktype)
     verified = models.BooleanField(default=False)
-    cover_image = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
+    cover_image = models.ImageField(upload_to='files/images', blank=True, null=True, default='coverimage.png')
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     phone_number = models.CharField(max_length=250, blank=True, default="")
@@ -90,7 +96,7 @@ class TalentProfile(models.Model):
     nondigital_skills = models.CharField(max_length=250, choices=NonDigitalSkills, blank=True)
     display_name = models.CharField(max_length=100,blank=True, null=True)
     category = models.CharField(max_length=250, blank=True, choices=CATEGORY_TYPE)
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='default.png')
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='newdefault.png')
     location = models.CharField(max_length=250,blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
@@ -100,7 +106,7 @@ class TalentProfile(models.Model):
     
 
     def __str__(self):
-        return f"{self.user.fullname}'s  Profile"
+        return f"{self.user.fullname}  Profile"
     
 
 
@@ -124,7 +130,7 @@ class Skill(models.Model):
 
 
 class ClientProfile(models.Model):
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='files/images/default.png')
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='files/images/newdefault.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
 
 
@@ -199,3 +205,11 @@ class Question(models.Model):
 
     
 
+class Waitlist(models.Model):
+    fullname = models.CharField(max_length=250)
+    email = models.EmailField()
+
+
+    def __str__(self):
+        return self.email
+    
