@@ -102,6 +102,16 @@ class UserSerializer(serializers.ModelSerializer):
         return attrs
      
 
+class OTPSerializer(serializers.ModelSerializer):
+    # email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('email',)
+
+
+     
+
 class ClientProfileSerializer(serializers.ModelSerializer):
      user = UserSerializer(read_only=True)
      class Meta:

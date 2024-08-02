@@ -35,11 +35,6 @@ def post_save_handler(sender, instance, created, **kwargs):
      useremail = instance.email
      otp = instance.otp
      print(otp)
-    #  otp0 = instance.otp[0]
-    #  otp1 = instance.otp[1]
-    #  otp2 = instance.otp[2]
-    #  otp3 = instance.otp[3]
-    #  otp4 = instance.otp[4]
      if created:
        if instance.role == 'Client':
            email.send_linkmail(fullname,useremail,otp)
@@ -54,12 +49,35 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
 
-class UpdateOtpSecretView(generics.UpdateAPIView):
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class UpdateOtpSecretView(generics.GenericAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = OTPSerializer
 
-    def users_update(self, serializer):
-        serializer.save()
+
+    def post(self, request, *args, **kwargs):
+        # serializer = OTPSerializer(data=request.data)
+        try:
+            d_email = request.data.get('email')
+            try:
+                user = User.objects.get(email=d_email)
+            except User.DoesNotExist:
+                return Response({"message":"User not found"}, status=status.HTTP_404_NOT_FOUND)
+            base32secret3232 = pyotp.random_base32()
+            otp = pyotp.TOTP(base32secret3232, interval=230, digits=5)
+            time_otp = otp.now()
+            otp_secret = base32secret3232
+            user.otp = time_otp
+            user.otp_secret = otp_secret
+            fullname = user.fullname
+            d_email = user.email
+            user.save()
+            email.send_linkmail(fullname,d_email,time_otp)
+            return Response({"message":"Token Updated"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"message": "Token not updated due to error"})
+
+             
     
     
     
@@ -191,7 +209,7 @@ class TalentProfileGetView(generics.ListAPIView):
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
+    # search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
     
     
 class UnAuthTalentProfileGetView(generics.ListAPIView):
@@ -199,7 +217,7 @@ class UnAuthTalentProfileGetView(generics.ListAPIView):
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter]
-    search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
+    # search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
 
 
 

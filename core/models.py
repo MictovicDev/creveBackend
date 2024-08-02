@@ -103,6 +103,11 @@ class TalentProfile(models.Model):
     whatsapp_link = models.CharField(max_length=250,blank=True, default="")
     website_link = models.CharField(max_length=250, blank=True, default="")
     resume_link = models.URLField(blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True, null=True)
+
+    class Meta:
+        ordering = ['-date']
+
     
 
     def __str__(self):
@@ -130,7 +135,7 @@ class Skill(models.Model):
 
 
 class ClientProfile(models.Model):
-    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='files/images/newdefault.png')
+    profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='newdefault.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
 
 
