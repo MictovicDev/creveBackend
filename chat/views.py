@@ -8,6 +8,7 @@ from core.models import *
 from chat.pusher import pusher_client
 from core.models import *
 from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
+from core import email
 
 
 
@@ -97,8 +98,8 @@ class MessageView(generics.GenericAPIView):
                 reciever = chat.reciever.user
             else:
                 sender = chat.reciever.user
-                reciever = request.user
-            pusher_client.trigger(chat.room_name, 'message', {'message': {"body": request.data.get('body'), "sender": sender.email, 'reciever': reciever.email, "fullname":reciever.fullname}})
+                reciever = chat.sender.user
+            pusher_client.trigger(chat.room_name, 'message', {'message': {"body": request.data.get('body'), "sender": sender.email, 'reciever': reciever.email, "fullname":sender.fullname}})
             message = Message.objects.create(
                                     chat=chat,
                                     sender=sender,
@@ -126,11 +127,11 @@ class AllChatView(generics.ListAPIView):
             profile = user.talentprofile
             return Chat.objects.filter(reciever=profile)
 
-
+#Used to initialize the chat between a creative and a client
 class ChatView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ChatSerializer
-
+    
     def get_queryset(self):
         user = self.request.user
         if user.role == 'Client':
@@ -172,6 +173,7 @@ class ChatView(generics.ListCreateAPIView):
                                     sender=request.user,
                                     reciever=talent_user, 
                                     body=request.data.get('body'))
+                        email.message_sent_mail(fullname=talent_profile.user.fullname, clientname=client_profile.user.fullname, useremail=talent_profile.user.email, message=request.data.get('body')[0:10])
                         serializer = ChatSerializer(instance=chat)
                         return response.Response(serializer.data, status=status.HTTP_200_OK)
                     except Exception as e:

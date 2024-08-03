@@ -64,7 +64,7 @@ class UpdateOtpSecretView(generics.GenericAPIView):
             except User.DoesNotExist:
                 return Response({"message":"User not found"}, status=status.HTTP_404_NOT_FOUND)
             base32secret3232 = pyotp.random_base32()
-            otp = pyotp.TOTP(base32secret3232, interval=230, digits=5)
+            otp = pyotp.TOTP(base32secret3232, interval=1000, digits=5)
             time_otp = otp.now()
             otp_secret = base32secret3232
             user.otp = time_otp
@@ -141,7 +141,7 @@ class ActivateAccount(generics.GenericAPIView):
         except:
             data = {'message': "User Does not exists"}
             return Response(data=data, status=status.HTTP_404_NOT_FOUND)
-        if  pyotp.TOTP(user.otp_secret, interval=230, digits=5).verify(otp):
+        if  pyotp.TOTP(user.otp_secret, interval=1000, digits=5).verify(otp):
             user.is_active = True
             user.save()
             data = {
