@@ -10,10 +10,20 @@ from django.db import models
 # 4. Date
 # 5. Category
 
+class Category(models.Model):
+    title = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.title
+
 class Blog(models.Model):
     title = models.CharField(max_length=250)
     description = models.TextField()
     author = models.CharField(max_length=250)
     date = models.DateTimeField(auto_now_add=True)
-    cat
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+    
 

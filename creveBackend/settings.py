@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'cloudinary',
-    'cloudinary_storage'
+    'cloudinary_storage',
+    'blog'
 ]
 
 MIDDLEWARE = [
