@@ -22,6 +22,7 @@ class Blog(models.Model):
     author = models.CharField(max_length=250)
     date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='files/images', blank=True, null=True)
 
     def __str__(self):
         return self.title

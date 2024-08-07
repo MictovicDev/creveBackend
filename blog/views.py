@@ -4,6 +4,11 @@ from blog.serializers import BlogSerializer
 from .models import Blog
 
 # Create your views here.
+
+
+
+
+
 class BlogView(generics.ListAPIView):
     queryset = Blog.objects.all()
     permission_classes = [permissions.IsAuthenticated]

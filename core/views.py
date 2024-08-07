@@ -91,7 +91,7 @@ class CreateUserView(generics.ListCreateAPIView):
      def perform_create(self, serializer):
         if serializer.is_valid():
             base32secret3232 = pyotp.random_base32()
-            otp = pyotp.TOTP(base32secret3232, interval=230, digits=5)
+            otp = pyotp.TOTP(base32secret3232, interval=1000, digits=5)
             time_otp = otp.now()
             role = serializer.validated_data.get('role')
             otp_secret = base32secret3232
