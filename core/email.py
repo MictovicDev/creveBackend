@@ -51,7 +51,8 @@ def send_booking_mail(fullname, clientname, useremail):
         return name
     except Exception as e:
         logger.error(f"Email sending failed: {str(e)}")
-
+        
+        
 def message_sent_mail(fullname, clientname, useremail, message):
     try:
         subject = 'One New Message'

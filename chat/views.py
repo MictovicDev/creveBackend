@@ -127,11 +127,12 @@ class AllChatView(generics.ListAPIView):
             profile = user.talentprofile
             return Chat.objects.filter(reciever=profile)
 
-#Used to initialize the chat between a creative and a client
+
+
 class ChatView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ChatSerializer
-    
+
     def get_queryset(self):
         user = self.request.user
         if user.role == 'Client':
@@ -148,25 +149,17 @@ class ChatView(generics.ListCreateAPIView):
         if request.user.is_authenticated:
             try:
                 pk = self.kwargs.get('pk')
-                # print(pk)
                 try:
                     talent_profile = TalentProfile.objects.get(id=pk)
-                    # print(talent_profile)
                 except TalentProfile.DoesNotExist:
                     return response.Response({"message": "TalentProfile Does not exist"})
                 user = request.user
-                # print(user.role)
+                print(user.role)
                 if  user.role == 'Client':
-                    # print('True')
                     try:
                         profile_id = user.clientprofile.id
-                        # print(profile_id)
                         client_profile = ClientProfile.objects.get(id=profile_id)
-                        # print(client_profile)
-                        try:
-                            chat, created= Chat.objects.get_or_create(sender=client_profile, reciever=talent_profile, room_name=f"chat_inbox_{talent_profile.id}_{client_profile.id}_unique")
-                        except Exception as e:
-                            print(e)
+                        chat, created= Chat.objects.get_or_create(sender=client_profile, reciever=talent_profile, room_name=f"chat_inbox_{talent_profile.id}_{client_profile.id}_unique")
                         talent_user = talent_profile.user
                         Message.objects.create(
                                     chat=chat,

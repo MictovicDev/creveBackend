@@ -82,11 +82,12 @@ class TalentProfile(models.Model):
         ('Frontend_Development', 'Frontend_Development')
     )
     CATEGORY_TYPE = (
-        ('DigitalSkills', 'DigitalSkills'),
-        ('Non-DigitalSkills', 'Non-DigitalSkills'),
+        ('Tech', 'Tech'),
+        ('Artisans', 'Artisans'),
     )
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True)
     work_type = models.CharField(max_length=500, blank=True, choices=worktype)
+    # verified = models.BooleanField(default=False)
     cover_image = models.ImageField(upload_to='files/images', blank=True, null=True, default='coverimage.png')
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
@@ -116,12 +117,11 @@ class TalentProfile(models.Model):
     
 class Verification(models.Model):
     verified = models.BooleanField(default=False)
-    profile = models.OneToOneField(TalentProfile, on_delete=models.CASCADE, related_name='verification', blank=True, null=True)
+    profile = models.OneToOneField(TalentProfile, on_delete=models.CASCADE, related_name='verification')
 
 
     def __str__(self):
         return f"{self.verified}{self.profile.user.fullname} is verified"
-    
 
     
 
@@ -225,7 +225,6 @@ class Question(models.Model):
 
     def __str__(self):
         return self.question
-
 
 
     

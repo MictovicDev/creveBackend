@@ -23,7 +23,7 @@ class Message(models.Model):
     seen = models.BooleanField(default=False)
     body = models.TextField()
     date = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
         ordering = ['-date']
 
