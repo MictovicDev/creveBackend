@@ -99,7 +99,7 @@ class MessageView(generics.GenericAPIView):
             else:
                 sender = chat.reciever.user
                 reciever = chat.sender.user
-            pusher_client.trigger(chat.room_name, 'message', {'message': {"body": request.data.get('body'), "sender": sender.email, 'reciever': reciever.email, "fullname":sender.fullname}})
+            pusher_client.trigger(chat.room_name, 'message', {'message': {"body": request.data.get('body'), "sender": sender.email, 'reciever': reciever.email, "fullname":sender.fullname, "room_name": chat.room_name}})
             message = Message.objects.create(
                                     chat=chat,
                                     sender=sender,

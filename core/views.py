@@ -202,8 +202,6 @@ class ClientProfileGetView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
-
-
 class TalentProfileGetView(generics.ListAPIView):
     queryset = TalentProfile.objects.all()
     serializer_class = TalentProfileSerializer
@@ -238,15 +236,22 @@ class TalentProfileGetUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = TalentProfileSerializer
     lookup_field = 'pk'
 
-    def perform_update(self,serializer):
-        try:
-            pk = self.kwargs.get('pk')
-            serializer.save()
-            print(dir(serializer))
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except ValidationError as e:
-            error_data = {'error': str(e)}
-            raise ValidationError(error_data)
+
+    def talentprofile_update(self,serializer):
+        instance = serializer.save()
+
+    # def perform_update(self,serializer):
+    #     try:
+    #         pk = self.kwargs.get('pk')
+    #         serializer.save()
+    #         print(dir(serializer))
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #     except ValidationError as e:
+    #         error_data = {'error': str(e)}
+    #         raise ValidationError(error_data)
+        
+
+
 
 
 class ListReview(generics.ListAPIView):
@@ -432,6 +437,7 @@ class GalleryListCreateView(generics.ListCreateAPIView):
     serializer_class = GallerySerializer
 
     def get_queryset(self):
+        
         user = self.request.user
         try:
             profile = TalentProfile.objects.get(user=user)
@@ -456,6 +462,36 @@ class GalleryListCreateView(generics.ListCreateAPIView):
                     except TalentProfile.DoesNotExist:
                         return Response({"message":"TalentProfile Does not exist"})
             return Response({"message": "you must be logged in to create question"})
+        return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class VerifyUserView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = NinSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        try:
+            profile = TalentProfile.objects.get(user=user)
+            return Nin.objects.filter(talentprofile=profile)
+        except TalentProfile.DoesNotExist:
+            return Nin.objects.none()
+        
+    def perform_create(self, serializer):
+        if serializer.is_valid():
+            image = serializer.validated_data['image']
+            try:
+                user = self.request.user
+                talentprofile = TalentProfile.objects.get(user=user)
+            except TalentProfile.DoesNotExist:
+                raise ValidationError({"Message": "Talent Profile Does not exist"})
+            if Nin.objects.filter(talentprofile=talentprofile).exists():
+                    print('True')
+                    raise ValidationError({"Message": "You can only upload your NIN once."}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer.save(talentprofile=talentprofile, image=image)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)
     
 

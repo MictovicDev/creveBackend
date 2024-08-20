@@ -6,5 +6,4 @@ from blog.views import *
 
 urlpatterns = [
     path('', BlogView.as_view(), name='blog'),
-    
 ]

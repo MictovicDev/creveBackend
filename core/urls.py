@@ -24,6 +24,7 @@ urlpatterns = [
     path('creativeprofile/<str:pk>/', views.TalentProfileGetUpdateView.as_view(), name="creativeprofile"),
     path('skills/', views.SkillsListCreateView.as_view(), name="create-skill"),
     path('skills/<str:pk>/', views.SkillUpdateDel.as_view(), name='skillupdate'),
+    path('nins/', views.VerifyUserView.as_view(), name='nin_verification'),
     path('reviews/<str:pk>/', views.ReviewCreateView.as_view(), name="create_review"),
     path('bookcreatives/<str:pk>/', views.BookCreativeView.as_view(), name="book_creative"),
     path('books/', views.BookView.as_view(), name="books"),

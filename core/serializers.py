@@ -59,6 +59,13 @@ class GallerySerializer(serializers.ModelSerializer):
         fields = ('id','image','images_list')
 
 
+class NinSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField()
+    class Meta:
+        model = Nin
+        fields = ('id', 'image')
+
+
 class ActivationSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -116,7 +123,7 @@ class ClientProfileSerializer(serializers.ModelSerializer):
      user = UserSerializer(read_only=True)
      class Meta:
          model = ClientProfile
-         fields = ('id','user','profile_pics',)
+         fields = ('id','user','profile_pics','address')
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -134,6 +141,12 @@ class TalentSerializer(serializers.ModelSerializer):
         model = TalentProfile
         fields = ('id','profile_pics','user')
 
+class VerificationSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Verification
+        fields = '__all__'
+
 
 class BookedCreativeSerializer(serializers.ModelSerializer):
     talent_profile = TalentSerializer(read_only=True)
@@ -148,12 +161,13 @@ class TalentProfileSerializer(serializers.ModelSerializer):
      user = UserSerializer(read_only=True)
      books = BookedCreativeSerializer(read_only=True, many=True)
      reviewed = ReviewSerializer(read_only=True, many=True)
+     questions = QuestionSerializer(read_only=True, many=True)
+     verification = VerificationSerializer(read_only=True)
 
 
      class Meta:
         model = TalentProfile
         fields = '__all__'
-
 
 
          

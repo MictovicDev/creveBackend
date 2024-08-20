@@ -87,7 +87,6 @@ class TalentProfile(models.Model):
     )
     digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True)
     work_type = models.CharField(max_length=500, blank=True, choices=worktype)
-    verified = models.BooleanField(default=False)
     cover_image = models.ImageField(upload_to='files/images', blank=True, null=True, default='coverimage.png')
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
@@ -104,6 +103,7 @@ class TalentProfile(models.Model):
     website_link = models.CharField(max_length=250, blank=True, default="")
     resume_link = models.URLField(blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, null=True)
+    experience = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['-date']
@@ -113,6 +113,17 @@ class TalentProfile(models.Model):
     def __str__(self):
         return f"{self.user.fullname}  Profile"
     
+    
+class Verification(models.Model):
+    verified = models.BooleanField(default=False)
+    profile = models.OneToOneField(TalentProfile, on_delete=models.CASCADE, related_name='verification', blank=True, null=True)
+
+
+    def __str__(self):
+        return f"{self.verified}{self.profile.user.fullname} is verified"
+    
+
+    
 
 
 class Gallery (models.Model):
@@ -121,6 +132,13 @@ class Gallery (models.Model):
 
     def __str__(self):
         return f"{self.talentprofile.user.fullname}'s  Gallery"
+    
+class Nin(models.Model):
+    image = models.ImageField(upload_to='files/images',blank=True, null=True)
+    talentprofile = models.OneToOneField(TalentProfile, on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.talentprofile.user.email}"
 
 
 
@@ -137,6 +155,7 @@ class Skill(models.Model):
 class ClientProfile(models.Model):
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='newdefault.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
+    address = models.CharField(max_length=500, blank=True, null=True)
 
 
     def __str__(self):
@@ -206,6 +225,7 @@ class Question(models.Model):
 
     def __str__(self):
         return self.question
+
 
 
     
