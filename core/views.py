@@ -25,6 +25,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from django.db.models import Q
 from core.serializers import WaitListSerializer
+from rest_framework.decorators import api_view
+
 # from channels.layers import get_channel_layer
 # from asgiref.sync import async_to_sync
 
@@ -207,7 +209,7 @@ class TalentProfileGetView(generics.ListAPIView):
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
-    # search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
+    search_fields = ['category','location','dskills__skill','work_type','digital_skills','nondigital_skills']
     
     
 class UnAuthTalentProfileGetView(generics.ListAPIView):
@@ -510,7 +512,15 @@ class SkillUpdateDel(generics.RetrieveUpdateDestroyAPIView):
     def skill_destroy(self, instance):
         return super().perform_destroy(instance)
                 
-        
+# 1. Get Total Number of Creatives ( and all creatives)
+# 2. Get Total Number of Clients (and all clients)
+# 3. Get Total Number of Request
+# 4. Get Active Users per week
+# 6. Get Complains
+# 6. Delete account
+# 7. Verify Creative
+# 8. Ban Creative
+# 9. Unban Creative        
 
 class GalleryUpdateDel(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -598,6 +608,37 @@ class DocumentApi(APIView):
             name = ' '.join(item.name.split('_'))
             data[name.capitalize()] = str(item.pattern)
         return Response(data=data, status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+def get_all_creatives(self):
+    creatives = {
+        'no_creatives':  len(TalentProfile.objects.all())
+    }
+    return Response(creatives, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def filtered_talents(self, pk):
+    try:
+        talent = TalentProfile.objects.get(id=pk)
+        print(talent.digital_skills)
+        skills = talent.digital_skills,
+        profession = talent.display_name
+        category =  talent.category
+        all_talent = TalentProfile.objects.filter(
+            Q(digital_skills= skills) |
+            (Q(display_name=profession) | Q(category=category))
+        )
+        # talent = TalentProfile.objects.filter(digital_skills=skills, display_name= profession, category=category)
+        print(all_talent)
+        serializer = TalentProfileSerializer(all_talent, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except TalentProfile.DoesNotExist:
+        return Response({"message": "talentprofile does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+
+
 
 
 

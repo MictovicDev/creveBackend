@@ -32,6 +32,7 @@ urlpatterns = [
     path('waitlist/', views.WaitListView.as_view(), name='waitlist'),
     path('gallery/', views.GalleryListCreateView.as_view(), name="create-gallery"),
     path('gallery/<str:pk>/', views.GalleryUpdateDel.as_view(), name= "delete-gallery"),
-    path('otp/', views.UpdateOtpSecretView.as_view(), name='otp')
-
+    path('otp/', views.UpdateOtpSecretView.as_view(), name='otp'),
+    path('creatives/', views.get_all_creatives, name='all_creatives'),
+    path('talents/<str:pk>/', views.filtered_talents, name='filtered_talents'),
 ]
