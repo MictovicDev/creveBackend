@@ -92,7 +92,7 @@ class TalentProfile(models.Model):
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     phone_number = models.CharField(max_length=250, blank=True, default="")
-    about = models.CharField(max_length=400, blank=True, null=True)
+    about = models.TextField(max_length=400, blank=True, null=True)
     nondigital_skills = models.CharField(max_length=250, choices=NonDigitalSkills, blank=True)
     display_name = models.CharField(max_length=100,blank=True, null=True)
     category = models.CharField(max_length=250, blank=True, choices=CATEGORY_TYPE)

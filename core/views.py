@@ -622,15 +622,14 @@ def filtered_talents(self, pk):
     try:
         talent = TalentProfile.objects.get(id=pk)
         print(talent.digital_skills)
-        skills = talent.digital_skills,
+        if talent.digital_skills == '':
+            skills = talent.nondigital_skills
+        else:
+            skills = talent.digital_skills
         profession = talent.display_name
-        category =  talent.category
         all_talent = TalentProfile.objects.filter(
-            Q(digital_skills= skills) |
-            (Q(display_name=profession) | Q(category=category))
-        )
-        # talent = TalentProfile.objects.filter(digital_skills=skills, display_name= profession, category=category)
-        print(all_talent)
+             Q(digital_skills= skills) |
+            (Q(display_name=profession))).exclude(id=pk)
         serializer = TalentProfileSerializer(all_talent, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     except TalentProfile.DoesNotExist:
