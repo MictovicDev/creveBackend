@@ -618,7 +618,7 @@ def get_all_creatives(self):
 
 
 @api_view(['GET'])
-def filtered_talents(self, pk):
+def filtered_talents(request, pk):
     try:
         talent = TalentProfile.objects.get(id=pk)
         print(talent.digital_skills)
@@ -630,7 +630,7 @@ def filtered_talents(self, pk):
         all_talent = TalentProfile.objects.filter(
              Q(digital_skills= skills) |
             (Q(display_name=profession))).exclude(id=pk)
-        serializer = TalentProfileSerializer(all_talent, many=True)
+        serializer = TalentProfileSerializer(all_talent, many=True,context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
     except TalentProfile.DoesNotExist:
         return Response({"message": "talentprofile does not exist"}, status=status.HTTP_400_BAD_REQUEST)
