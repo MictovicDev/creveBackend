@@ -25,7 +25,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from django.db.models import Q
 from core.serializers import WaitListSerializer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
 
 # from channels.layers import get_channel_layer
 # from asgiref.sync import async_to_sync
@@ -512,15 +514,7 @@ class SkillUpdateDel(generics.RetrieveUpdateDestroyAPIView):
     def skill_destroy(self, instance):
         return super().perform_destroy(instance)
                 
-# 1. Get Total Number of Creatives ( and all creatives)
-# 2. Get Total Number of Clients (and all clients)
-# 3. Get Total Number of Request
-# 4. Get Active Users per week
-# 6. Get Complains
-# 6. Delete account
-# 7. Verify Creative
-# 8. Ban Creative
-# 9. Unban Creative        
+        
 
 class GalleryUpdateDel(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -595,8 +589,7 @@ class QuestionListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
             
 
-
-
+            
 class DocumentApi(APIView):
     permission_classes = [permissions.AllowAny]
     def get(self, request):
@@ -609,7 +602,19 @@ class DocumentApi(APIView):
             data[name.capitalize()] = str(item.pattern)
         return Response(data=data, status=status.HTTP_200_OK)
     
+
+# 1. Get Total Number of Creatives ( and all creatives) Done
+# 2. Get Total Number of Clients (and all clients) Done
+# 3. Get Total Number of Request Done
+# 4. Get Active Users per week
+# 6. Get Complains 
+# 6. Delete account Done
+# 7. Verify Creative Done
+# 8. Ban Creative 
+# 9. Unban Creative
+    
 @api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def get_all_creatives(self):
     creatives = {
         'no_creatives':  len(TalentProfile.objects.all())
@@ -618,6 +623,26 @@ def get_all_creatives(self):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def get_all_clients(self):
+    clients = {
+        'no_clients':  len(ClientProfile.objects.all())
+    }
+    return Response(clients, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def get_all_requests(self):
+    try:
+        requests = {
+        'no_requests':  len(BookedCreative.objects.all())
+    }
+        return Response(requests, status=status.HTTP_200_OK)
+    except BookedCreative.DoesNotExist():
+        return Response({"message": "Can't get the Numbers of Request Right Now"}, status= status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def filtered_talents(request, pk):
     try:
         talent = TalentProfile.objects.get(id=pk)
@@ -634,6 +659,51 @@ def filtered_talents(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except TalentProfile.DoesNotExist:
         return Response({"message": "talentprofile does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def delete_user(request, pk):
+    try:
+        model_instance = User.objects.get(id=pk)
+        print(model_instance)
+        model_instance.delete()
+        return Response({"message": "Model deleted successfully"})
+    except User.DoesNotExist:
+        return Response({"error": "Model not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def verify_creative(request, pk):
+    talent = TalentProfile.objects.get(id=pk)
+    Verification.objects.create(profile=talent, verified=True)
+    return Response({"message": "TalentProfile has been Verified"})
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def ban_user(request,pk):
+    user = User.objects.get(id=pk)
+    user.is_active = False
+    user.save()
+    return Response({"message":"User has been Banned"}, status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def unban_user(request,pk):
+    user = User.objects.get(id=pk)
+    user.is_active = True
+    user.save()
+    return Response({"message":"User has been unBanned"}, status=200)
+
+
+
+
+
     
     
 
