@@ -175,9 +175,7 @@ class ChatView(generics.ListCreateAPIView):
                     return response.Response({"message": "Creative cannot initialize chat"})
             except Exception as e:
               return response.Response({"message": "User not authenticated"}, status=status.HTTP_400_BAD_REQUEST)
-        
-
-        return response.Response({"message":"Creeat"}, status=status.HTTP_200_OK)
+        return response.Response({"message":"Create"}, status=status.HTTP_200_OK)
     
         
 
