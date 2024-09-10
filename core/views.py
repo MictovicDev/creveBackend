@@ -617,29 +617,30 @@ class DocumentApi(APIView):
 @permission_classes([IsAuthenticated, IsAdminUser])
 def get_all_creatives(self):
     creatives = {
-        'no_creatives':  len(TalentProfile.objects.all())
+        
     }
     return Response(creatives, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
-def get_all_clients(self):
-    clients = {
-        'no_clients':  len(ClientProfile.objects.all())
+def get_app_info(self):
+    info = {
+        'no_clients':  len(ClientProfile.objects.all()),
+        'no_creatives':  len(TalentProfile.objects.all()),
+        'no_requests':  len(BookedCreative.objects.all()),
     }
-    return Response(clients, status=status.HTTP_200_OK)
+    return Response(info, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated, IsAdminUser])
-def get_all_requests(self):
-    try:
-        requests = {
-        'no_requests':  len(BookedCreative.objects.all())
-    }
-        return Response(requests, status=status.HTTP_200_OK)
-    except BookedCreative.DoesNotExist():
-        return Response({"message": "Can't get the Numbers of Request Right Now"}, status= status.HTTP_400_BAD_REQUEST)
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated, IsAdminUser])
+# def get_all_requests(self):
+#     try:
+#         requests = {
+#     }
+#         return Response(requests, status=status.HTTP_200_OK)
+#     except BookedCreative.DoesNotExist():
+#         return Response({"message": "Can't get the Numbers of Request Right Now"}, status= status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
