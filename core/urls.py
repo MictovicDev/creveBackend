@@ -34,6 +34,7 @@ urlpatterns = [
     path('gallery/<str:pk>/', views.GalleryUpdateDel.as_view(), name= "delete-gallery"),
     path('otp/', views.UpdateOtpSecretView.as_view(), name='otp'),
     path('info/', views.get_app_info, name='info'),
+    path('creatives/', views.get_creatives, name='creatives'),
     path('removeuser/<str:pk>/', views.delete_user, name='delete_user'),
     path('verify/<str:pk>/', views.verify_creative, name="verify_creative"),
     path('ban/<str:pk>/', views.ban_user, name='ban_user'),

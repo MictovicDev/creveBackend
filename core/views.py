@@ -662,12 +662,26 @@ def filtered_talents(request, pk):
         return Response({"message": "talentprofile does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def get_creatives(request):
+    try:
+        creatives = TalentProfile.objects.all()  # Retrieve all TalentProfile instances
+        if creatives.exists():  # Optional: Handle case where no creatives are found
+            serializer = AdminCreativeSerializer(creatives, many=True, context={'request': request})
+            return Response(serializer.data, status=200)
+        else:
+            return Response({"Message": "No creatives found"}, status=404)
+    except Exception as e:  # Optional: Add error handling for unexpected exceptions
+        return Response({"Message": f"An error occurred: {str(e)}"}, status=500)
+
+
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def delete_user(request, pk):
     try:
         model_instance = User.objects.get(id=pk)
-        print(model_instance)
         model_instance.delete()
         return Response({"message": "Model deleted successfully"})
     except User.DoesNotExist:
@@ -687,10 +701,20 @@ def verify_creative(request, pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def ban_user(request,pk):
-    user = User.objects.get(id=pk)
-    user.is_active = False
-    user.save()
-    return Response({"message":"User has been Banned"}, status=200)
+    try:
+        user = User.objects.get(id=pk)
+        user.is_active = False
+        try:
+            talent = TalentProfile.objects.get(user=user)
+            print(talent)
+            print('me')
+            talent.is_banned = True
+            talent.save()
+        except TalentProfile.DoesNotExist:
+            return Response({"Message": "Talent Profile Does not exists"}, status=404)
+        return Response({"Message":"User has been Banned"}, status=200)
+    except:
+        return Response({"Message": "An Error Occured"})
 
 
 @api_view(['GET'])

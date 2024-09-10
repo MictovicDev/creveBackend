@@ -102,14 +102,14 @@ class TalentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
     whatsapp_link = models.CharField(max_length=250,blank=True, default="")
     website_link = models.CharField(max_length=250, blank=True, default="")
+    is_banned = models.BooleanField(default=False)
     resume_link = models.URLField(blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, null=True)
     experience = models.IntegerField(default=0)
+    
 
     class Meta:
         ordering = ['-date']
-
-    
 
     def __str__(self):
         return f"{self.user.fullname}  Profile"
@@ -135,7 +135,7 @@ class Gallery (models.Model):
     
 class Nin(models.Model):
     image = models.ImageField(upload_to='files/images',blank=True, null=True)
-    talentprofile = models.OneToOneField(TalentProfile, on_delete=models.CASCADE, blank=True, null=True)
+    talentprofile = models.OneToOneField(TalentProfile, on_delete=models.CASCADE, blank=True, null=True, related_name='nin')
 
     def __str__(self):
         return f"{self.talentprofile.user.email}"

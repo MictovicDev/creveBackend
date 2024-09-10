@@ -139,7 +139,7 @@ class TalentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TalentProfile
-        fields = ('id','profile_pics','user')
+        fields = ('id','profile_pics','user','nin')
 
 class VerificationSerializer(serializers.ModelSerializer):
     
@@ -168,6 +168,14 @@ class TalentProfileSerializer(serializers.ModelSerializer):
      class Meta:
         model = TalentProfile
         fields = '__all__'
+
+class AdminCreativeSerializer(serializers.ModelSerializer):
+    verification = VerificationSerializer()
+    nin = NinSerializer()
+    class Meta:
+        model = TalentProfile
+        fields = ['id','profile_pics','display_name', 'cover_image', 'verification','is_banned','nin']
+
 
 
          
