@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 from core.serializers import MyTokenObtainPairSerializer, UserSerializer
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.parsers import MultiPartParser, FormParser, FileUploadParser
@@ -29,8 +30,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
-# from channels.layers import get_channel_layer
-# from asgiref.sync import async_to_sync
+class CustomPagination(PageNumberPagination):
+    page_size = 5 
 
 
 @receiver(post_save, sender=User)
@@ -208,6 +209,7 @@ class ClientProfileGetView(generics.ListAPIView):
 
 class TalentProfileGetView(generics.ListAPIView):
     queryset = TalentProfile.objects.all()
+    pagination_class = CustomPagination
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
