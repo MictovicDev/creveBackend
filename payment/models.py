@@ -14,7 +14,7 @@ class Transaction(models.Model):
     client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE)
     creative = models.ForeignKey(TalentProfile, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=250, choices=status, default='None')
+    status = models.CharField(max_length=250, choices=status, default='Pending')
 
     def __str__(self):
         return(f"Transaction between {self.client} and {self.user}")

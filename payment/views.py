@@ -5,26 +5,31 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .serializers import HundredPaySerializer
 import json
-from .providers.provider_factory import ProviderFactory
+from .provider.provider_factory import ProviderFactory
+from .models import Transaction
 
 
-# Create your views here.
-# class HundredPayView(generics.CreateAPIView):
-#     serializer_class = HundredPaySerializer
-#     transaction_type = 'hundredpay'
-#     permission_classes = [permissions.IsAuthenticated]
-
-
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated, IsAdminUser])
-def hundred_pay(request):
-    transaction_type= '100pay'
-    serializer = HundredPaySerializer(data=request.data)
-    if serializer.is_valid():
-        json_data = json.dumps(serializer.data)
+def hundred_pay(request, pk=''):
+    transaction_type= '100Pay'
+    if request.method == 'POST':
+        serializer = HundredPaySerializer(data=request.data)
+        if serializer.is_valid():
+            json_data = json.dumps(serializer.data)
+            print(json_data)
+            provider = ProviderFactory.createprovider(transaction_type)
+            headers = provider.get_headers()
+            print(headers)
+            response = provider.create_payment_charge(headers,payload=json_data)
+            if response.status_code == '200':
+                Transaction.objects.create(client=client, creative=creative)
+            return Response(response.json(), status=response.status_code)
+        return Response(serializer.errors, status=400)
+    
+    elif request.method == 'GET':
+        id = pk
         provider = ProviderFactory.createprovider(transaction_type)
         headers = provider.get_headers()
-        response = provider.send_money(headers,payload=json_data)
+        response = provider.get_payment_charge(headers, id)
         return Response(response.json(), status=response.status_code)
-
-    return Response(response.json(), status=response.status_code)
