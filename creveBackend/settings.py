@@ -3,7 +3,10 @@ import dj_database_url
 import os
 from datetime import timedelta
 from django.conf import settings
-# import cloudinary_storage
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -13,7 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@_=)*c7sw_^_gnf%vvdoj9hx$%6piixfs9hi)31k(g8fh&rq17'
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -43,7 +47,8 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'drf_yasg',
-    'blog'
+    'blog',
+    'payment'
 ]
 
 MIDDLEWARE = [

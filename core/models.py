@@ -44,12 +44,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 
-
-# class Profile(models.Model):
-
-#     class Meta:
-#         abstract = True
-
     
 class TalentProfile(models.Model):
     worktype = (
@@ -57,7 +51,7 @@ class TalentProfile(models.Model):
         ('On-site', 'On-site'),
         ('Hybrid', 'Hybrid'),
     )
-    NonDigitalSkills = (
+    Skills = (
         ('Plumbing','Plumbing'),
         ('Catering','Catering'),
         ('Hair_Stylist','Hair_Stylist'),
@@ -69,39 +63,41 @@ class TalentProfile(models.Model):
         ('Barbing', 'Barbing'),
         ('Fashion-Designer','Fashion-Designer'),
     )
-    DigitalSkills = (
-        ('BackendDevelopment', 'BackendDevelopment'),
-        ('Photography', 'Photography'),
-        ('Blockchain Developement','Blockchain Developement'),
-        ('Video_editing', 'Video_editing'),
-        ('WebsiteDevelopment', 'WebsiteDevelopment'),
-        ('MobileDevelopment','MobileDevelopment'),
-        ('UI/UX_Design','UI/UX_Design'),
-        ('Graphics_Design','Graphics_Design'),
-        ('Content_Creation','Content_Creation'),
-        ('Frontend_Development', 'Frontend_Development')
-    )
-    CATEGORY_TYPE = (
-        ('Tech', 'Tech'),
-        ('Artisans', 'Artisans'),
-    )
-    digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True)
+    # DigitalSkills = (
+    #     ('BackendDevelopment', 'BackendDevelopment'),
+    #     ('Photography', 'Photography'),
+    #     ('Blockchain Developement','Blockchain Developement'),
+    #     ('Video_editing', 'Video_editing'),
+    #     ('WebsiteDevelopment', 'WebsiteDevelopment'),
+    #     ('MobileDevelopment','MobileDevelopment'),
+    #     ('UI/UX_Design','UI/UX_Design'),
+    #     ('Graphics_Design','Graphics_Design'),
+    #     ('Content_Creation','Content_Creation'),
+    #     ('Frontend_Development', 'Frontend_Development')
+    # )
+    # CATEGORY_TYPE = (
+    #     ('Tech', 'Tech'),
+    #     ('Artisans', 'Artisans'),
+    # )
+    # digital_skills = models.CharField(max_length=250, choices=DigitalSkills,blank=True)
     work_type = models.CharField(max_length=500, blank=True, choices=worktype)
-    # verified = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
     cover_image = models.ImageField(upload_to='files/images', blank=True, null=True, default='coverimage.png')
     summary_of_profile = models.TextField(blank=True, null=True)
     starting_price = models.PositiveBigIntegerField(blank=True, null=True)
     phone_number = models.CharField(max_length=250, blank=True, default="")
     about = models.TextField(max_length=400, blank=True, null=True)
-    nondigital_skills = models.CharField(max_length=250, choices=NonDigitalSkills, blank=True)
+    skills = models.CharField(max_length=250, choices=Skills, blank=True)
     display_name = models.CharField(max_length=100,blank=True, null=True)
-    category = models.CharField(max_length=250, blank=True, choices=CATEGORY_TYPE)
+    # category = models.CharField(max_length=250, blank=True, choices=CATEGORY_TYPE)
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='newdefault.png')
-    location = models.CharField(max_length=250,blank=True, null=True)
+    state = models.CharField(max_length=250, blank=True)
+    city = models.CharField(max_length=500, blank=True)
+    address = models.CharField(max_length=500, blank=True, null=True)
     language = models.CharField(max_length=250,blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='talentprofile')
-    whatsapp_link = models.CharField(max_length=250,blank=True, default="")
-    website_link = models.CharField(max_length=250, blank=True, default="")
+    # whatsapp_link = models.CharField(max_length=250,blank=True, default="")
+    # website_link = models.CharField(max_length=250, blank=True, default="")
     is_banned = models.BooleanField(default=False)
     resume_link = models.URLField(blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True, null=True)
@@ -155,6 +151,9 @@ class Skill(models.Model):
 class ClientProfile(models.Model):
     profile_pics = models.ImageField(upload_to='files/images', blank=True, null=True, default='newdefault.png')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='clientprofile')
+    state = models.CharField(max_length=250,blank=True, null=True)
+    country = models.CharField(max_length=500, blank=True, null=True)
+    city = models.CharField(max_length=500, blank=True, null=True)
     address = models.CharField(max_length=500, blank=True, null=True)
 
 

@@ -376,10 +376,8 @@ class BookCreativeView(generics.ListCreateAPIView):
         pk = self.kwargs.get('pk')
         print(pk)
         if serializer.is_valid():
-            print('Yes')
             title = serializer.validated_data['title']
             description = serializer.validated_data['description']
-            phone_number = serializer.validated_data['phone']
             try:
                 client_profile = ClientProfile.objects.get(user=self.request.user)
             except ClientProfile.DoesNotExist:
@@ -394,7 +392,7 @@ class BookCreativeView(generics.ListCreateAPIView):
                 data = {"message": "Client not found"}
                 return  Response(data=data, status=status.HTTP_404_NOT_FOUND)
             if talent_profile and client_profile:
-                BookedCreative.objects.create(talent_profile=talent_profile, client_profile=client_profile, title=title, description=description, phone=phone_number)
+                BookedCreative.objects.create(talent_profile=talent_profile, client_profile=client_profile, title=title, description=description)
                 print(client_profile.user.fullname)
                 email.send_booking_mail(fullname=talent_profile.user.fullname, clientname=client_profile.user.fullname, useremail=talent_email)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
