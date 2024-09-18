@@ -166,6 +166,7 @@ class BookedCreative(models.Model):
     client_profile = models.ForeignKey(ClientProfile, on_delete=models.CASCADE, blank=True,null=True)
     title = models.CharField(max_length=250, null=True)
     description = models.TextField()
+    status = models.BooleanField(default=False)
     datetime = models.DateTimeField(auto_now_add=True)
     phone = models.CharField(max_length=250, null=True)
 

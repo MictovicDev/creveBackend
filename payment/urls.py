@@ -6,6 +6,5 @@ from payment.views import *
 
 
 urlpatterns = [
-   path('', hundred_pay, name='create_payment_charge'),
-   path('<str:pk>/', hundred_pay, name='get_payment_charge')
+   path('', hundred_pay, name='create_transaction'),
 ]

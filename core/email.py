@@ -31,17 +31,38 @@ def send_linkmail(fullname,useremail,otp):
         logger.error(f"Email sending failed: {str(e)}")
     return 'Sent'
 
-def send_booking_mail(fullname, clientname, useremail):
+def send_talent_booking_mail(talentname, clientname, talentemail):
     try:
         subject = 'You have a job Offer'
-        name = fullname.capitalize()
+        talentname = talentname.capitalize()
         email_data = {
-            'name': name,
-            'client' : clientname
+            'talentname': talentname,
+            'clientname' : clientname
         }
         html_message = render_to_string('core/request.html',email_data)
         from_email = os.environ.get('EMAIL_USER')
-        recipient_list = [useremail]
+        recipient_list = [talentemail]
+        send_mail(subject,
+            message=None,
+            from_email=from_email,
+            recipient_list= recipient_list,
+            fail_silently=False,
+            html_message=html_message)
+        return talentname
+    except Exception as e:
+        logger.error(f"Email sending failed: {str(e)}")
+
+def send_client_booking_mail(clientname, talentname, clientemail):
+    try:
+        subject = 'Your Request has been made'
+        clientname = clientname.capitalize()
+        email_data = {
+            'clientname': clientname,
+            'talentname' : talentname
+        }
+        html_message = render_to_string('core/clientrequest.html',email_data)
+        from_email = os.environ.get('EMAIL_USER')
+        recipient_list = [clientemail]
         send_mail(subject,
             message=None,
             from_email=from_email,

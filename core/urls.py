@@ -27,6 +27,7 @@ urlpatterns = [
     path('nins/', views.VerifyUserView.as_view(), name='nin_verification'),
     path('reviews/<str:pk>/', views.ReviewCreateView.as_view(), name="create_review"),
     path('bookcreatives/<str:pk>/', views.BookCreativeView.as_view(), name="book_creative"),
+    path('approve-request/<str:pk>/', views.BookCreativeUpdateView.as_view(), name="approve"),
     path('books/', views.BookView.as_view(), name="books"),
     path('reviews/', views.ListReview.as_view(), name='reviews'),
     path('waitlist/', views.WaitListView.as_view(), name='waitlist'),

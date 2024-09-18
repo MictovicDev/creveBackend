@@ -139,7 +139,7 @@ class TalentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = TalentProfile
-        fields = ('id','profile_pics','user','nin')
+        fields = ('id','profile_pics','user','nin','phone_number')
 
 class VerificationSerializer(serializers.ModelSerializer):
     
@@ -153,7 +153,12 @@ class BookedCreativeSerializer(serializers.ModelSerializer):
     client_profile = ClientProfileSerializer(read_only=True)
     class Meta:
         model = BookedCreative
-        fields = ('id','title', 'description', 'client_profile','talent_profile')
+        fields = ('id','title', 'description', 'client_profile','talent_profile', 'status')
+
+class ApprovedCreativeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookedCreative
+        fields = ('status',)
 
 class TalentProfileSerializer(serializers.ModelSerializer):
      dskills = SkillSerializer(read_only=True, many=True)

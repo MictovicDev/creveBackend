@@ -48,6 +48,18 @@ def post_save_handler(sender, instance, created, **kwargs):
           email.send_linkmail(fullname,useremail,otp)
           TalentProfile.objects.create(user=instance)
 
+@receiver(post_save, sender=BookedCreative)
+def post_save_handler(sender, instance, created, **kwargs):
+     talentname = instance.talent_profile.user.fullname
+     clientname = instance.client_profile.user.fullname
+     clientemail = instance.client_profile.user.email
+     talentemail = instance.talent_profile.user.email
+     if created:
+       if instance.client_profile.user.role == 'Client':
+           email.send_client_booking_mail(talentname,clientname,clientemail)
+       else:
+          email.send_talent_booking_mail(talentname, clientname, talentemail)
+
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -342,20 +354,29 @@ class BookView(generics.ListAPIView):
 
     def get_queryset(self):
         try:
-            try:
-                talent_profile = TalentProfile.objects.get(user=self.request.user)
-                bookies = BookedCreative.objects.filter(talent_profile=talent_profile)
-            except TalentProfile.DoesNotExist:
-                print("YEs")
-                client_profile = ClientProfile.objects.get(user=self.request.user)
-                print(client_profile)
-                bookies = BookedCreative.objects.filter(client_profile=client_profile)
+            talent_profile = TalentProfile.objects.get(user=self.request.user)
+            bookies = BookedCreative.objects.filter(talent_profile=talent_profile)
             return bookies
-        except BookedCreative.DoesNotExist:
-            return []
+        except TalentProfile.DoesNotExist:
+            print("YEs")
+            client_profile = ClientProfile.objects.get(user=self.request.user)
+            print(client_profile)
+            bookies = BookedCreative.objects.filter(client_profile=client_profile)
+            return bookies
+
+
+class BookCreativeUpdateView(generics.UpdateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = BookedCreative.objects.all()
+    serializer_class = BookedCreativeSerializer
+
+    def bookcreatt_update(self,serializer):
+        instance = serializer.save()
+
 
 
 class BookCreativeView(generics.ListCreateAPIView):
+    print(dir(generics))
     permission_classes = [permissions.IsAuthenticated]
     queryset = BookedCreative.objects.all()
     serializer_class = BookedCreativeSerializer
@@ -366,7 +387,9 @@ class BookCreativeView(generics.ListCreateAPIView):
             client_profile = ClientProfile.objects.get(user=self.request.user)
             print(client_profile)
             talent_profile = TalentProfile.objects.get(id=pk)
+            print(talent_profile)
             bookies = BookedCreative.objects.filter(talent_profile=talent_profile, client_profile=client_profile)
+            print(bookies)
             return bookies
         except BookedCreative.DoesNotExist:
             return []
@@ -380,6 +403,7 @@ class BookCreativeView(generics.ListCreateAPIView):
             description = serializer.validated_data['description']
             try:
                 client_profile = ClientProfile.objects.get(user=self.request.user)
+                client_email = client_profile.email
             except ClientProfile.DoesNotExist:
                 print('Yes from client')
                 data = {"message": "Client not found"}
@@ -393,8 +417,8 @@ class BookCreativeView(generics.ListCreateAPIView):
                 return  Response(data=data, status=status.HTTP_404_NOT_FOUND)
             if talent_profile and client_profile:
                 BookedCreative.objects.create(talent_profile=talent_profile, client_profile=client_profile, title=title, description=description)
-                print(client_profile.user.fullname)
-                email.send_booking_mail(fullname=talent_profile.user.fullname, clientname=client_profile.user.fullname, useremail=talent_email)
+                # email.send_talent_booking_mail(fullname=talent_profile.user.fullname, clientname=client_profile.user.fullname, useremail=talent_email)
+                # email.send_client_booking_mail(clientname=client_profile.user.fullname, talentname=talent_profile.user.fullname, talentemail=talent_email)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response({"message": "Users not found"}, status= status.HTTP_404_NOT_FOUND)
         else:
