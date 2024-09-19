@@ -95,3 +95,26 @@ def message_sent_mail(fullname, clientname, useremail, message):
         return name
     except Exception as e:
         logger.error(f"Email sending failed: {str(e)}")
+
+
+def request_approved_mail(talentname, clientname, clientemail):
+    try:
+        subject = 'Request Status'
+        name = talentname.capitalize()
+        email_data = {
+            'name': name,
+            'talent_name' : talentname,
+            'clientname': clientname
+        }
+        html_message = render_to_string('core/requestapproved.html',email_data)
+        from_email = os.environ.get('EMAIL_USER')
+        recipient_list = [clientemail]
+        send_mail(subject,
+            message=None,
+            from_email=from_email,
+            recipient_list= recipient_list,
+            fail_silently=False,
+            html_message=html_message)
+        return name
+    except Exception as e:
+        logger.error(f"Email sending failed: {str(e)}")

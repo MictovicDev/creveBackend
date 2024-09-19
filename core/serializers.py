@@ -153,7 +153,7 @@ class BookedCreativeSerializer(serializers.ModelSerializer):
     client_profile = ClientProfileSerializer(read_only=True)
     class Meta:
         model = BookedCreative
-        fields = ('id','title', 'description', 'client_profile','talent_profile', 'status')
+        fields = ('id','title', 'description', 'client_profile','talent_profile','status', 'datetime')
 
 class ApprovedCreativeSerializer(serializers.ModelSerializer):
     class Meta:

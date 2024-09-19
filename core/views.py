@@ -50,15 +50,18 @@ def post_save_handler(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=BookedCreative)
 def post_save_handler(sender, instance, created, **kwargs):
-     talentname = instance.talent_profile.user.fullname
-     clientname = instance.client_profile.user.fullname
-     clientemail = instance.client_profile.user.email
-     talentemail = instance.talent_profile.user.email
-     if created:
-       if instance.client_profile.user.role == 'Client':
-           email.send_client_booking_mail(talentname,clientname,clientemail)
-       else:
-          email.send_talent_booking_mail(talentname, clientname, talentemail)
+    talentname = instance.talent_profile.user.fullname
+    clientname = instance.client_profile.user.fullname
+    clientemail = instance.client_profile.user.email
+    talentemail = instance.talent_profile.user.email
+    if created:
+        if instance.client_profile.user.role == 'Client':
+            email.send_client_booking_mail(talentname,clientname,clientemail)
+        else:
+            email.send_talent_booking_mail(talentname, clientname, talentemail)
+    email.request_approved_mail(talentname, clientname, clientemail)
+         
+    
 
 
 
@@ -221,7 +224,7 @@ class ClientProfileGetView(generics.ListAPIView):
 
 class TalentProfileGetView(generics.ListAPIView):
     queryset = TalentProfile.objects.all()
-    pagination_class = CustomPagination
+    # pagination_class = CustomPagination
     serializer_class = TalentProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
@@ -368,10 +371,13 @@ class BookView(generics.ListAPIView):
 class BookCreativeUpdateView(generics.UpdateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     queryset = BookedCreative.objects.all()
-    serializer_class = BookedCreativeSerializer
+    serializer_class = ApprovedCreativeSerializer
 
-    def bookcreatt_update(self,serializer):
+    def perform_update(self, serializer):
         instance = serializer.save()
+         
+
+    
 
 
 
@@ -403,11 +409,11 @@ class BookCreativeView(generics.ListCreateAPIView):
             description = serializer.validated_data['description']
             try:
                 client_profile = ClientProfile.objects.get(user=self.request.user)
-                client_email = client_profile.email
+                # client_email = client_profile.email
             except ClientProfile.DoesNotExist:
                 print('Yes from client')
                 data = {"message": "Client not found"}
-                return  Response(data=data, status=status.HTTP_404_NOT_FOUND)
+                return Response(data=data, status=status.HTTP_404_NOT_FOUND)
             try:
                 talent_profile = TalentProfile.objects.get(id=pk)
                 talent_email = talent_profile.user.email
