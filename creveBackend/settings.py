@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'drf_yasg',
     'blog',
-    'payment'
+    'wallet'
+    
 ]
 
 MIDDLEWARE = [

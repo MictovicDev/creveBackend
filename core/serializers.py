@@ -149,6 +149,7 @@ class VerificationSerializer(serializers.ModelSerializer):
 
 
 class BookedCreativeSerializer(serializers.ModelSerializer):
+    datetime =  serializers.DateTimeField(format='%d-%m-%Y %H:%M:%S')
     talent_profile = TalentSerializer(read_only=True)
     client_profile = ClientProfileSerializer(read_only=True)
     class Meta:
