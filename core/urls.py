@@ -34,11 +34,13 @@ urlpatterns = [
     path('gallery/', views.GalleryListCreateView.as_view(), name="create-gallery"),
     path('gallery/<str:pk>/', views.GalleryUpdateDel.as_view(), name= "delete-gallery"),
     path('otp/', views.UpdateOtpSecretView.as_view(), name='otp'),
+    ##Admin Dashboard
     path('info/', views.get_app_info, name='info'),
     path('creatives/', views.get_creatives, name='creatives'),
     path('removeuser/<str:pk>/', views.delete_user, name='delete_user'),
     path('verify/<str:pk>/', views.verify_creative, name="verify_creative"),
     path('ban/<str:pk>/', views.ban_user, name='ban_user'),
     path('unban/<str:pk>/', views.unban_user, name='unban_user'),
+    ##end of admin dashboard
     path('talents/<str:pk>/', views.filtered_talents, name='filtered_talents'),
 ]

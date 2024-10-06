@@ -30,7 +30,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 import os
 from core.models import TalentProfile
-from .models import Payment
+from .models import Payment, Wallet, SolPayment
+from .serializers import  SolPaymentSerialzer
 
 # Create your views here.
 
@@ -46,24 +47,26 @@ def verify_payment(request):
     if received_token == api_secret:
         payload = json.loads(request.body.decode('utf-8'))
         charge_id = payload.get('chargeId')
-        print(charge_id)
+        # print(charge_id)
         data = payload.get('data')
         charge = data.get('charge')
-        talent_id = charge.get('ref_id')
+        talent_id = charge.get('metadata').get('talent_id')
         transaction_id = data.get('transaction_id')
         network = data.get('network')
         status = data.get('status')
         timestamp = data.get('timestamp')
         value = data.get('value')
-        client_id = data.get('charge').get('customer')['user_id']
+        amount = charge.get('billing').get('amount')
+        print(amount)
+        client_id = charge.get('metadata').get('client_id')
         try:
             talent = TalentProfile.objects.get(user__id=talent_id)
         except TalentProfile.DoesNotExist:
-             return Response({"message": "Talent profile does not exist"})
+             return Response({"message": "Talent profile does not exist"}, status=404)
         try:
             client = ClientProfile.objects.get(user__id=client_id)
         except ClientProfile.DoesNotExist:
-             return Response({"message": "Client profile does not exist"})
+             return Response({"message": "Client profile does not exist"}, status=404)
         print(talent, client)
         payment, created = Payment.objects.get_or_create(
                 transaction_id=transaction_id,
@@ -91,9 +94,8 @@ def verify_payment(request):
             if response.status_code == 200:
                 print(f"Response Headers: {response.headers}")
                 print('Successfully notified external endpoint.')
-                # Wallet.objects.create(earnings=)
-                # print(dir(response))
-                print(response.content)
+                withdrawable_balance = 0.03 * amount
+                Wallet.objects.create(earnings=amount, withdrawable_balance=withdrawable_balance, owner=talent)
             else:
                 print(f'Failed to notify external endpoint: {response.content}')
 
@@ -105,7 +107,28 @@ def verify_payment(request):
     
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated, IsAdminUser])
-def createpin(request, pk):
-    pass
+@permission_classes([IsAuthenticated])
+def createsolpayment(request):
+    client_id = request.POST.get('client_id')
+    talent_id = request.POST.get('talent_id')
+    amount = request.POST.get('amount')
+    # print(type(amount))
+    print(client_id, talent_id, amount)
+    description = request.POST.get('description')
+    try:
+        client = ClientProfile.objects.get(id=client_id)
+    except ClientProfile.DoesNotExist:
+        return Response({"message":"Client Profile Matching Query Does not Exists"}, status=404)
+    try:
+         talent = TalentProfile.objects.get(id=talent_id)
+    except TalentProfile.DoesNotExist:
+        return Response({"message":"Talent Profile Matching Query Does not Exists"}, status=404)
+    solpayment = SolPayment.objects.create(client=client, talent=talent, amount=amount, description=description)
+    wallet, created = Wallet.objects.get_or_create(owner=talent)
+    wallet.earnings += int(amount)
+    wallet.save()
+    serializer = SolPaymentSerialzer(solpayment)
+    return Response(serializer.data, status=200)
+     
+    
 

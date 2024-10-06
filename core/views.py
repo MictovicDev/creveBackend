@@ -378,9 +378,6 @@ class BookCreativeUpdateView(generics.UpdateAPIView):
          
 
     
-
-
-
 class BookCreativeView(generics.ListCreateAPIView):
     print(dir(generics))
     permission_classes = [permissions.IsAuthenticated]

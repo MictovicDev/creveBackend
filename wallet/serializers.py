@@ -7,6 +7,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers,response,status
 from django.contrib.auth.password_validation import validate_password
 from core.models import *
+from wallet.models import SolPayment
 from django.shortcuts import get_object_or_404
 
 import re
@@ -42,3 +43,9 @@ class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
         fields = ('id','skill','skills_list')
+
+
+class SolPaymentSerialzer(serializers.ModelSerializer):
+    class Meta:
+        model = SolPayment
+        fields = '__all__'

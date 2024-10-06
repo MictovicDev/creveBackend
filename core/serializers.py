@@ -176,6 +176,7 @@ class TalentProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AdminCreativeSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
     verification = VerificationSerializer()
     nin = NinSerializer()
     class Meta:
